@@ -34,10 +34,30 @@ pub struct TestConfig {
     /// Enable the nemesis (fault injection)
     #[arg(long, default_value_t = false)]
     pub nemesis: bool,
+
+    /// Docker network name to partition (default matches docker-compose in build_scripts/)
+    #[arg(long, default_value = "build_scripts_default")]
+    pub nemesis_network: String,
+
+    /// Comma-separated Docker container names the nemesis may partition
+    #[arg(long, default_value = "s1,s2,s3")]
+    pub nemesis_containers: String,
+
+    /// Enable crash + restart fault injection (kill and restart Docker containers)
+    #[arg(long, default_value_t = false)]
+    pub nemesis_crash: bool,
 }
 
 impl TestConfig {
     pub fn server_list(&self) -> Vec<String> {
         self.servers.split(',').map(|s| s.trim().to_string()).collect()
+    }
+
+    pub fn nemesis_containers_list(&self) -> Vec<String> {
+        self.nemesis_containers
+            .split(',')
+            .map(|s| s.trim().to_string())
+            .filter(|s| !s.is_empty())
+            .collect()
     }
 }

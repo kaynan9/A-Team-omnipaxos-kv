@@ -1,0 +1,2 @@
+{:deps {knossos/knossos {:mvn/version "0.3.10"}}
+ :paths ["src"]}

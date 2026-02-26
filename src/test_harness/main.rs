@@ -25,6 +25,9 @@ async fn main() {
     println!("cas_ratio:      {}", cfg.cas_ratio);
     println!("output:         {}", cfg.output);
     println!("nemesis:        {}", cfg.nemesis);
+    println!("nemesis_network:    {}", cfg.nemesis_network);
+    println!("nemesis_containers: {}", cfg.nemesis_containers);
+    println!("nemesis_crash:      {}", cfg.nemesis_crash);
 
     let history = History::new();
     let servers = cfg.server_list();
@@ -113,7 +116,10 @@ async fn main() {
     }
 
     if cfg.nemesis {
-        let nemesis_handle = tokio::spawn(nemesis::run_nemesis_schedule());
+        let network = cfg.nemesis_network.clone();
+        let containers = cfg.nemesis_containers_list();
+        let crash = cfg.nemesis_crash;
+        let nemesis_handle = tokio::spawn(nemesis::run_nemesis_schedule(network, containers, crash));
         for handle in handles {
             let _ = handle.await;
         }
