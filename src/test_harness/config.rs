@@ -36,7 +36,7 @@ pub struct TestConfig {
     pub nemesis: bool,
 
     /// Docker network name to partition (default matches docker-compose in build_scripts/)
-    #[arg(long, default_value = "build_scripts_default")]
+    #[arg(long, default_value = "omnipaxos-net")]
     pub nemesis_network: String,
 
     /// Comma-separated Docker container names the nemesis may partition
