@@ -80,4 +80,4 @@
             (println (str "  - key " (pr-str (:key f)))))
           (System/exit 1))))))
 
-(-main *command-line-args*)
+

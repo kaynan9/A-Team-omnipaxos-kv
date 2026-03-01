@@ -13,9 +13,18 @@ use tokio::sync::{mpsc, oneshot};
 
 use crate::server::ShimRequest;
 
-static NEXT_ID: std::sync::atomic::AtomicUsize = std::sync::atomic::AtomicUsize::new(1);
+static NEXT_ID: std::sync::atomic::AtomicUsize = std::sync::atomic::AtomicUsize::new(0);
 
 fn next_command_id() -> usize {
+    static INIT: std::sync::Once = std::sync::Once::new();
+    INIT.call_once(|| {
+        let offset = (std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .expect("system clock before UNIX epoch")
+            .as_nanos() as usize)
+            % 1_000_000_000;
+        NEXT_ID.store(offset, std::sync::atomic::Ordering::Relaxed);
+    });
     NEXT_ID.fetch_add(1, std::sync::atomic::Ordering::Relaxed)
 }
 

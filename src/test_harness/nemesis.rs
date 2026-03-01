@@ -110,8 +110,8 @@ async fn restore_all(stopped: &mut Vec<String>) {
 // ---------------------------------------------------------------------------
 
 async fn run_partition_faults(network: &str, containers: &[String], partitioned: &mut Vec<String>) {
-    println!("NEMESIS: waiting 5s for cluster to stabilize...");
-    sleep(Duration::from_secs(5)).await;
+    println!("NEMESIS: waiting 2s for cluster to stabilize...");
+    sleep(Duration::from_secs(2)).await;
 
     for container in containers.iter() {
         // --- Inject partition ---
@@ -157,8 +157,8 @@ async fn run_crash_faults(containers: &[String], stopped: &mut Vec<String>) {
 
     let mut rng = StdRng::from_entropy();
 
-    println!("NEMESIS [crash]: waiting 5s for cluster to stabilize...");
-    sleep(Duration::from_secs(5)).await;
+    println!("NEMESIS [crash]: waiting 2s for cluster to stabilize...");
+    sleep(Duration::from_secs(2)).await;
 
     // Perform crash-restart cycles on randomly selected nodes.
     // We do `containers.len()` rounds so each node is targeted on average once.

@@ -7,6 +7,7 @@ use crate::generator::Operation;
 #[derive(Debug)]
 pub enum OpResult {
     Ok(Option<String>),
+    #[allow(dead_code)]
     Fail(String),
     Indeterminate,
 }
@@ -77,7 +78,10 @@ impl TestClient {
         }
 
         match json["error"].as_str().unwrap_or("") {
-            "timeout" | "unavailable" => OpResult::Indeterminate,
+            "timeout" | "unavailable" => {
+                self.rotate();
+                OpResult::Indeterminate
+            }
             other => OpResult::Fail(other.to_string()),
         }
     }

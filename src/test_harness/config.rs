@@ -12,7 +12,7 @@ pub struct TestConfig {
     pub num_clients: usize,
 
     /// Number of operations per client
-    #[arg(long, default_value_t = 100)]
+    #[arg(long, default_value_t = 1500)]
     pub ops_per_client: usize,
 
     /// Number of distinct keys in the keyspace

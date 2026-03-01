@@ -9,6 +9,7 @@ pub enum EventType {
     Invoke,
     Ok,
     Fail,
+    #[allow(dead_code)] // produced by Knossos internally for dangling invokes; kept for write_edn completeness
     Info,
 }
 
