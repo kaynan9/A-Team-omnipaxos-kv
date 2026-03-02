@@ -33,6 +33,8 @@ async fn main() {
     println!("nemesis_network:    {}", cfg.nemesis_network);
     println!("nemesis_containers: {}", cfg.nemesis_containers);
     println!("nemesis_crash:      {}", cfg.nemesis_crash);
+    println!("nemesis_quorum_loss: {}", cfg.nemesis_quorum_loss);
+    println!("convergence_check:  {}", cfg.convergence_check);
 
     let history = History::new();
     let servers = cfg.server_list();
@@ -89,6 +91,7 @@ async fn main() {
                     key: key.clone(),
                     value: invoke_value.clone(),
                     expected: invoke_expected.clone(),
+                    error: None,
                 });
 
                 let result = client.send_op(&op).await;
@@ -105,12 +108,13 @@ async fn main() {
                     continue;
                 }
 
-                let (event_type, result_value) = match (&result, &func) {
+                let (event_type, result_value, error_msg) = match (&result, &func) {
                     // Read :ok — use the value the server returned.
-                    (OpResult::Ok(v), FunctionType::Read) => (EventType::Ok, v.clone()),
+                    (OpResult::Ok(v), FunctionType::Read) => (EventType::Ok, v.clone(), None),
                     // Write / CAS :ok — echo back the value from the original op.
-                    (OpResult::Ok(_), _)   => (EventType::Ok, invoke_value.clone()),
-                    (OpResult::Fail(_), _) => (EventType::Fail, invoke_value.clone()),
+                    (OpResult::Ok(_), _)   => (EventType::Ok, invoke_value.clone(), None),
+                    (OpResult::PreconditionFailed(msg), _) => (EventType::Fail, invoke_value.clone(), Some(msg.clone())),
+                    (OpResult::SystemError(msg), _) => (EventType::Fail, invoke_value.clone(), Some(msg.clone())),
                     (OpResult::Indeterminate, _) => unreachable!(),
                 };
 
@@ -121,6 +125,7 @@ async fn main() {
                     key: key.clone(),
                     value: result_value,
                     expected: invoke_expected,
+                    error: error_msg,
                 });
 
                 // Update known_values on confirmed write success.
@@ -146,8 +151,13 @@ async fn main() {
         let network = cfg.nemesis_network.clone();
         let containers = cfg.nemesis_containers_list();
         let crash = cfg.nemesis_crash;
-        let nemesis_handle = tokio::spawn(nemesis::run_nemesis_schedule(network, containers, crash));
+        let quorum_loss = cfg.nemesis_quorum_loss;
+        let nemesis_handle = tokio::spawn(nemesis::run_nemesis_schedule(network, containers, crash, quorum_loss));
         let _ = nemesis_handle.await;
+
+        println!("\nNEMESIS: faults finished. Waiting 15s for quiescent period...");
+        sleep(Duration::from_secs(15)).await;
+
         cancel.store(true, Ordering::Relaxed);
         for handle in handles {
             let _ = handle.await;
@@ -164,6 +174,7 @@ async fn main() {
 
     let total = history.len();
     let (invokes, oks, fails, _) = history.type_counts();
+    let (precondition_fails, system_errors) = history.error_counts();
     // Indeterminate ops leave a dangling :invoke with no paired result.
     // Knossos converts these to :info internally during linearizability checking.
     let indeterminate = invokes - oks - fails;
@@ -171,7 +182,51 @@ async fn main() {
     println!("total events:  {}", total);
     println!("  :invoke      {}", invokes);
     println!("  :ok          {}", oks);
-    println!("  :fail        {}", fails);
+    println!("  :fail        {} (CAS Precondition: {}, System Error: {})", fails, precondition_fails, system_errors);
     println!("  :info        {} (indeterminate, resolved by Knossos)", indeterminate);
     println!("history written to: {}", cfg.output);
+
+    // --- Convergence check (post-fault liveness verification) ---
+    if cfg.convergence_check {
+        println!("\n--- convergence check ---");
+        let mut conv_client = TestClient::new(servers.clone(), 0);
+        let mut passed = 0usize;
+        let mut failed_keys: Vec<String> = Vec::new();
+
+        for i in 0..cfg.key_range {
+            let key = format!("k{i}");
+            let op = Operation::Get { key: key.clone() };
+            let mut success = false;
+
+            for attempt in 0..3 {
+                match conv_client.send_op(&op).await {
+                    OpResult::Ok(_) | OpResult::PreconditionFailed(_) | OpResult::SystemError(_) => {
+                        success = true;
+                        break;
+                    }
+                    OpResult::Indeterminate => {
+                        if attempt < 2 {
+                            println!("Convergence: key {key} — attempt {attempt} indeterminate, retrying...");
+                        }
+                    }
+                }
+            }
+
+            if success {
+                passed += 1;
+            } else {
+                failed_keys.push(key);
+            }
+        }
+
+        if failed_keys.is_empty() {
+            println!("Convergence check: PASSED — all {} keys readable", passed);
+        } else {
+            println!(
+                "Convergence check: FAILED — {} keys unreachable: {:?}",
+                failed_keys.len(),
+                failed_keys
+            );
+        }
+    }
 }

@@ -60,7 +60,7 @@ cd "$SCRIPT_DIR"
 cargo run --release --bin test-harness -- \
     --servers http://localhost:8081,http://localhost:8082,http://localhost:8083 \
     --num-clients 5 \
-    --ops-per-client 50 \
+    --ops-per-client 1500 \
     --key-range 3 \
     --read-ratio 0.4 \
     --cas-ratio 0.2 \

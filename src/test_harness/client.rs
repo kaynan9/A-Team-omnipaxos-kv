@@ -7,8 +7,8 @@ use crate::generator::Operation;
 #[derive(Debug)]
 pub enum OpResult {
     Ok(Option<String>),
-    #[allow(dead_code)]
-    Fail(String),
+    PreconditionFailed(String),
+    SystemError(String),
     Indeterminate,
 }
 
@@ -82,7 +82,8 @@ impl TestClient {
                 self.rotate();
                 OpResult::Indeterminate
             }
-            other => OpResult::Fail(other.to_string()),
+            "precondition-failed" => OpResult::PreconditionFailed("precondition-failed".to_string()),
+            other => OpResult::SystemError(other.to_string()),
         }
     }
 }

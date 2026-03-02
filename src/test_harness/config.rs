@@ -46,6 +46,14 @@ pub struct TestConfig {
     /// Enable crash + restart fault injection (kill and restart Docker containers)
     #[arg(long, default_value_t = false)]
     pub nemesis_crash: bool,
+
+    /// Enable quorum-loss fault injection (kill majority of nodes simultaneously)
+    #[arg(long, default_value_t = false)]
+    pub nemesis_quorum_loss: bool,
+
+    /// Run post-fault convergence check (verify all keys readable after recovery)
+    #[arg(long, default_value_t = false)]
+    pub convergence_check: bool,
 }
 
 impl TestConfig {

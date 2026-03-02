@@ -28,6 +28,7 @@ pub struct HistoryEvent {
     pub key: String,
     pub value: Option<String>,
     pub expected: Option<String>,
+    pub error: Option<String>,
 }
 
 #[derive(Clone)]
@@ -68,6 +69,23 @@ impl History {
         (invoke, ok, fail, info)
     }
 
+    /// Returns (precondition_failed, system_error) counts.
+    pub fn error_counts(&self) -> (usize, usize) {
+        let events = self.events.lock().unwrap();
+        let mut precondition_failed = 0;
+        let mut system_error = 0;
+        for e in events.iter() {
+            if let Some(err) = &e.error {
+                if err == "precondition-failed" {
+                    precondition_failed += 1;
+                } else {
+                    system_error += 1;
+                }
+            }
+        }
+        (precondition_failed, system_error)
+    }
+
     pub fn write_edn(&self, path: &str) -> std::io::Result<()> {
         let events = self.events.lock().unwrap();
         let file = File::create(path)?;
@@ -106,10 +124,15 @@ impl History {
                 }
             };
 
+            let error_edn = match &e.error {
+                Some(err) => format!(" :error {}", edn_str(Some(err))),
+                None => "".to_string(),
+            };
+
             writeln!(
                 w,
-                " {{:process {} :type {} :f {} :value {}}}",
-                e.process, type_kw, f_kw, value_edn
+                " {{:process {} :type {} :f {} :value {}{}}}",
+                e.process, type_kw, f_kw, value_edn, error_edn
             )?;
         }
         writeln!(w, "]")?;
@@ -135,6 +158,7 @@ mod tests {
         key: &str,
         value: Option<&str>,
         expected: Option<&str>,
+        error: Option<&str>,
     ) -> HistoryEvent {
         HistoryEvent {
             process,
@@ -143,6 +167,7 @@ mod tests {
             key: key.to_string(),
             value: value.map(str::to_string),
             expected: expected.map(str::to_string),
+            error: error.map(str::to_string),
         }
     }
 
@@ -150,20 +175,20 @@ mod tests {
     fn record_and_len() {
         let h = History::new();
         assert_eq!(h.len(), 0);
-        h.record(make_event(0, EventType::Invoke, FunctionType::Write, "k1", Some("v0"), None));
-        h.record(make_event(0, EventType::Ok,     FunctionType::Write, "k1", Some("v0"), None));
-        h.record(make_event(1, EventType::Invoke, FunctionType::Read,  "k1", None,       None));
-        h.record(make_event(1, EventType::Ok,     FunctionType::Read,  "k1", Some("v0"), None));
+        h.record(make_event(0, EventType::Invoke, FunctionType::Write, "k1", Some("v0"), None, None));
+        h.record(make_event(0, EventType::Ok,     FunctionType::Write, "k1", Some("v0"), None, None));
+        h.record(make_event(1, EventType::Invoke, FunctionType::Read,  "k1", None,       None, None));
+        h.record(make_event(1, EventType::Ok,     FunctionType::Read,  "k1", Some("v0"), None, None));
         assert_eq!(h.len(), 4);
     }
 
     #[test]
     fn type_counts_correct() {
         let h = History::new();
-        h.record(make_event(0, EventType::Invoke, FunctionType::Write, "k1", Some("v0"), None));
-        h.record(make_event(0, EventType::Ok,     FunctionType::Write, "k1", Some("v0"), None));
-        h.record(make_event(1, EventType::Invoke, FunctionType::Read,  "k1", None,       None));
-        h.record(make_event(1, EventType::Ok,     FunctionType::Read,  "k1", Some("v0"), None));
+        h.record(make_event(0, EventType::Invoke, FunctionType::Write, "k1", Some("v0"), None, None));
+        h.record(make_event(0, EventType::Ok,     FunctionType::Write, "k1", Some("v0"), None, None));
+        h.record(make_event(1, EventType::Invoke, FunctionType::Read,  "k1", None,       None, None));
+        h.record(make_event(1, EventType::Ok,     FunctionType::Read,  "k1", Some("v0"), None, None));
 
         let (invokes, oks, fails, infos) = h.type_counts();
         assert_eq!(invokes, 2);
@@ -173,12 +198,27 @@ mod tests {
     }
 
     #[test]
+    fn error_counts_correct() {
+        let h = History::new();
+        // 1 CAS failure
+        h.record(make_event(0, EventType::Fail, FunctionType::Cas, "k1", Some("v1"), Some("v0"), Some("precondition-failed")));
+        // 1 System error
+        h.record(make_event(1, EventType::Fail, FunctionType::Write, "k2", Some("v1"), None, Some("timeout")));
+        // 1 Success (no error)
+        h.record(make_event(2, EventType::Ok, FunctionType::Write, "k3", Some("v1"), None, None));
+
+        let (precondition, system) = h.error_counts();
+        assert_eq!(precondition, 1);
+        assert_eq!(system, 1);
+    }
+
+    #[test]
     fn write_edn_format() {
         let h = History::new();
-        h.record(make_event(0, EventType::Invoke, FunctionType::Write, "k1", Some("v0"), None));
-        h.record(make_event(0, EventType::Ok,     FunctionType::Write, "k1", Some("v0"), None));
-        h.record(make_event(1, EventType::Invoke, FunctionType::Read,  "k1", None,       None));
-        h.record(make_event(1, EventType::Ok,     FunctionType::Read,  "k1", Some("v0"), None));
+        h.record(make_event(0, EventType::Invoke, FunctionType::Write, "k1", Some("v0"), None, None));
+        h.record(make_event(0, EventType::Ok,     FunctionType::Write, "k1", Some("v0"), None, None));
+        h.record(make_event(1, EventType::Invoke, FunctionType::Read,  "k1", None,       None, None));
+        h.record(make_event(1, EventType::Ok,     FunctionType::Read,  "k1", Some("v0"), None, None));
 
         let path = "test_history_output.edn";
         h.write_edn(path).expect("write_edn failed");
