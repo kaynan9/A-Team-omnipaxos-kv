@@ -213,6 +213,19 @@ async fn run_partition_faults(network: String, containers: Vec<String>) -> Vec<S
 
         // --- Disconnect the group simultaneously ---
         let disconnected = docker_network_disconnect_group(&network, &partition_set).await;
+
+        // If the first container (initial leader) is among the newly partitioned nodes,
+        // make it explicit in the log that this is a leader-isolation scenario.
+        if let Some(leader) = containers.first() {
+            if disconnected.contains(leader) {
+                println!(
+                    "NEMESIS: NOTE — {} is the initial leader (per cluster config). \
+                     This partition tests leader isolation.",
+                    leader
+                );
+            }
+        }
+
         partitioned.extend(disconnected);
 
         // Hold partition for 10s

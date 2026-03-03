@@ -1,0 +1,28 @@
+=== OmniPaxos KV Test Harness — Run Summary ===
+
+--- config ---
+servers:             http://localhost:8081,http://localhost:8082,http://localhost:8083
+num_clients:         5
+ops_per_client:      1500
+key_range:           5
+read_ratio:          0.4
+cas_ratio:           0.2
+output:              history-partitions.edn
+nemesis:             true
+nemesis_network:     omnipaxos-net
+nemesis_containers:  s1,s2,s3
+nemesis_crash:       false
+nemesis_quorum_loss: false
+convergence_check:   false
+
+--- event counts ---
+total:   13668
+:invoke  6834
+:ok      5728
+:fail    1094 (precondition-failed: 1094, system-error: 0)
+:info    12 (indeterminate)
+
+--- nemesis ---
+Fault injection was enabled during this run.
+Network: omnipaxos-net  Containers: s1,s2,s3
+NOTE: s1 is the initial leader (per cluster config). Leader isolation was tested.

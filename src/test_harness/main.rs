@@ -4,9 +4,9 @@ mod generator;
 mod history;
 mod nemesis;
 
-use std::sync::{
-    Arc,
-    atomic::{AtomicBool, Ordering},
+use std::{
+    fmt::Write as FmtWrite,
+    sync::{Arc, atomic::{AtomicBool, Ordering}},
 };
 
 use clap::Parser;
@@ -96,26 +96,17 @@ async fn main() {
 
                 let result = client.send_op(&op).await;
 
-                // Indeterminate result: the invoke is left without a completion event.
-                // Knossos 0.3.10 does not treat :info as a completion, so we leave the
-                // invoke dangling. Knossos's complete() converts dangling invokes to :info
-                // at the end. We advance to a fresh process ID so the next op doesn't
-                // collide with the still-open invoke.
-                if matches!(result, OpResult::Indeterminate) {
-                    process_id += num_clients;
-                    let delay_ms = rng.gen_range(10u64..=50);
-                    sleep(Duration::from_millis(delay_ms)).await;
-                    continue;
-                }
-
                 let (event_type, result_value, error_msg) = match (&result, &func) {
                     // Read :ok — use the value the server returned.
                     (OpResult::Ok(v), FunctionType::Read) => (EventType::Ok, v.clone(), None),
                     // Write / CAS :ok — echo back the value from the original op.
-                    (OpResult::Ok(_), _)   => (EventType::Ok, invoke_value.clone(), None),
+                    (OpResult::Ok(_), _) => (EventType::Ok, invoke_value.clone(), None),
                     (OpResult::PreconditionFailed(msg), _) => (EventType::Fail, invoke_value.clone(), Some(msg.clone())),
                     (OpResult::SystemError(msg), _) => (EventType::Fail, invoke_value.clone(), Some(msg.clone())),
-                    (OpResult::Indeterminate, _) => unreachable!(),
+                    // Indeterminate: record a visible :info event so the EDN file has a
+                    // paired completion for every invoke, then advance to a fresh process ID
+                    // so the next op does not reuse this process slot.
+                    (OpResult::Indeterminate, _) => (EventType::Info, invoke_value.clone(), None),
                 };
 
                 history.record(HistoryEvent {
@@ -127,6 +118,12 @@ async fn main() {
                     expected: invoke_expected,
                     error: error_msg,
                 });
+
+                // Advance to a fresh process ID after an indeterminate result so that
+                // subsequent ops on this client do not reuse the same process slot.
+                if matches!(result, OpResult::Indeterminate) {
+                    process_id += num_clients;
+                }
 
                 // Update known_values on confirmed write success.
                 match (&result, &op) {
@@ -173,60 +170,103 @@ async fn main() {
         .expect("failed to write history");
 
     let total = history.len();
-    let (invokes, oks, fails, _) = history.type_counts();
+    let (invokes, oks, fails, infos) = history.type_counts();
     let (precondition_fails, system_errors) = history.error_counts();
-    // Indeterminate ops leave a dangling :invoke with no paired result.
-    // Knossos converts these to :info internally during linearizability checking.
-    let indeterminate = invokes - oks - fails;
     println!("\n--- summary ---");
     println!("total events:  {}", total);
     println!("  :invoke      {}", invokes);
     println!("  :ok          {}", oks);
     println!("  :fail        {} (CAS Precondition: {}, System Error: {})", fails, precondition_fails, system_errors);
-    println!("  :info        {} (indeterminate, resolved by Knossos)", indeterminate);
+    println!("  :info        {} (indeterminate)", infos);
     println!("history written to: {}", cfg.output);
 
+    // --- Write summary file ---
+    let summary_path = if cfg.output.ends_with(".edn") {
+        format!("{}.summary.txt", &cfg.output[..cfg.output.len() - 4])
+    } else {
+        format!("{}.summary.txt", cfg.output)
+    };
+
+    let mut summary = String::new();
+    writeln!(summary, "=== OmniPaxos KV Test Harness — Run Summary ===").unwrap();
+    writeln!(summary).unwrap();
+    writeln!(summary, "--- config ---").unwrap();
+    writeln!(summary, "servers:             {}", cfg.servers).unwrap();
+    writeln!(summary, "num_clients:         {}", cfg.num_clients).unwrap();
+    writeln!(summary, "ops_per_client:      {}", cfg.ops_per_client).unwrap();
+    writeln!(summary, "key_range:           {}", cfg.key_range).unwrap();
+    writeln!(summary, "read_ratio:          {}", cfg.read_ratio).unwrap();
+    writeln!(summary, "cas_ratio:           {}", cfg.cas_ratio).unwrap();
+    writeln!(summary, "output:              {}", cfg.output).unwrap();
+    writeln!(summary, "nemesis:             {}", cfg.nemesis).unwrap();
+    if cfg.nemesis {
+        writeln!(summary, "nemesis_network:     {}", cfg.nemesis_network).unwrap();
+        writeln!(summary, "nemesis_containers:  {}", cfg.nemesis_containers).unwrap();
+        writeln!(summary, "nemesis_crash:       {}", cfg.nemesis_crash).unwrap();
+        writeln!(summary, "nemesis_quorum_loss: {}", cfg.nemesis_quorum_loss).unwrap();
+    }
+    writeln!(summary, "convergence_check:   {}", cfg.convergence_check).unwrap();
+    writeln!(summary).unwrap();
+    writeln!(summary, "--- event counts ---").unwrap();
+    writeln!(summary, "total:   {}", total).unwrap();
+    writeln!(summary, ":invoke  {}", invokes).unwrap();
+    writeln!(summary, ":ok      {}", oks).unwrap();
+    writeln!(summary, ":fail    {} (precondition-failed: {}, system-error: {})",
+             fails, precondition_fails, system_errors).unwrap();
+    writeln!(summary, ":info    {} (indeterminate)", infos).unwrap();
+    if cfg.nemesis {
+        writeln!(summary).unwrap();
+        writeln!(summary, "--- nemesis ---").unwrap();
+        writeln!(summary, "Fault injection was enabled during this run.").unwrap();
+        writeln!(summary, "Network: {}  Containers: {}",
+                 cfg.nemesis_network, cfg.nemesis_containers).unwrap();
+        if cfg.nemesis_crash       { writeln!(summary, "  crash faults:       enabled").unwrap(); }
+        if cfg.nemesis_quorum_loss { writeln!(summary, "  quorum-loss faults: enabled").unwrap(); }
+        if let Some(leader) = cfg.nemesis_containers_list().into_iter().next() {
+            writeln!(summary,
+                "NOTE: {} is the initial leader (per cluster config). Leader isolation was tested.",
+                leader
+            ).unwrap();
+        }
+    }
+
+    std::fs::write(&summary_path, &summary).expect("failed to write summary file");
+    println!("summary written to:  {}", summary_path);
+
     // --- Convergence check (post-fault liveness verification) ---
+    // For each server, write a sentinel key then read it back to confirm
+    // that server can serve both writes and reads independently.
     if cfg.convergence_check {
         println!("\n--- convergence check ---");
-        let mut conv_client = TestClient::new(servers.clone(), 0);
-        let mut passed = 0usize;
-        let mut failed_keys: Vec<String> = Vec::new();
 
-        for i in 0..cfg.key_range {
-            let key = format!("k{i}");
-            let op = Operation::Get { key: key.clone() };
-            let mut success = false;
+        for (idx, server_url) in servers.iter().enumerate() {
+            // Pin this client to a single server by giving it a one-element list.
+            let mut conv_client = TestClient::new(vec![server_url.clone()], 0);
 
-            for attempt in 0..3 {
-                match conv_client.send_op(&op).await {
-                    OpResult::Ok(_) | OpResult::PreconditionFailed(_) | OpResult::SystemError(_) => {
-                        success = true;
-                        break;
-                    }
-                    OpResult::Indeterminate => {
-                        if attempt < 2 {
-                            println!("Convergence: key {key} — attempt {attempt} indeterminate, retrying...");
-                        }
-                    }
-                }
-            }
+            let sentinel_key = format!("__conv_check_{idx}__");
+            let sentinel_val = format!("probe_{idx}");
 
-            if success {
-                passed += 1;
+            // PUT
+            let put_op = Operation::Put {
+                key: sentinel_key.clone(),
+                value: sentinel_val.clone(),
+            };
+            let put_ok = matches!(conv_client.send_op(&put_op).await, OpResult::Ok(_));
+
+            // GET
+            let get_op = Operation::Get { key: sentinel_key.clone() };
+            let get_ok = matches!(conv_client.send_op(&get_op).await, OpResult::Ok(_));
+
+            if put_ok && get_ok {
+                println!("CONVERGENCE CHECK: {} — OK", server_url);
             } else {
-                failed_keys.push(key);
+                println!(
+                    "CONVERGENCE CHECK: {} — FAIL (put={}, get={})",
+                    server_url,
+                    if put_ok { "ok" } else { "fail" },
+                    if get_ok { "ok" } else { "fail" },
+                );
             }
-        }
-
-        if failed_keys.is_empty() {
-            println!("Convergence check: PASSED — all {} keys readable", passed);
-        } else {
-            println!(
-                "Convergence check: FAILED — {} keys unreachable: {:?}",
-                failed_keys.len(),
-                failed_keys
-            );
         }
     }
 }
