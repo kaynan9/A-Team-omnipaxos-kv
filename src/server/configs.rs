@@ -24,6 +24,7 @@ pub struct LocalConfig {
     pub listen_port: u16,
     pub num_clients: usize,
     pub output_filepath: String,
+    pub http_port: Option<u16>,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
@@ -65,7 +66,6 @@ impl OmniPaxosKVConfig {
         let config = Config::builder()
             .add_source(File::with_name(&local_config_file))
             .add_source(File::with_name(&cluster_config_file))
-            // Add-in/overwrite settings with environment variables (with a prefix of OMNIPAXOS)
             .add_source(
                 Environment::with_prefix("OMNIPAXOS")
                     .try_parsing(true)

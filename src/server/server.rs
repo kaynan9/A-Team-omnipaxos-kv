@@ -1,4 +1,8 @@
-use crate::{configs::OmniPaxosKVConfig, database::Database, network::Network};
+use crate::{
+    configs::OmniPaxosKVConfig,
+    database::{CommandResult, Database},
+    network::Network,
+};
 use chrono::Utc;
 use log::*;
 use omnipaxos::{
@@ -8,12 +12,21 @@ use omnipaxos::{
 };
 use omnipaxos_kv::common::{kv::*, messages::*, utils::Timestamp};
 use omnipaxos_storage::memory_storage::MemoryStorage;
-use std::{fs::File, io::Write, time::Duration};
+use std::{collections::HashMap, fs::File, io::Write, time::Duration};
+use tokio::sync::{mpsc, oneshot};
 
 type OmniPaxosInstance = OmniPaxos<Command, MemoryStorage<Command>>;
 const NETWORK_BATCH_SIZE: usize = 100;
 const LEADER_WAIT: Duration = Duration::from_secs(1);
 const ELECTION_TIMEOUT: Duration = Duration::from_secs(1);
+
+pub struct ShimRequest {
+    pub command_id: CommandId,
+    pub kv_command: KVCommand,
+    pub responder: oneshot::Sender<ServerMessage>,
+}
+
+pub const SHIM_CLIENT_ID: ClientId = u64::MAX;
 
 pub struct OmniPaxosServer {
     id: NodeId,
@@ -24,16 +37,19 @@ pub struct OmniPaxosServer {
     omnipaxos_msg_buffer: Vec<Message<Command>>,
     config: OmniPaxosKVConfig,
     peers: Vec<NodeId>,
+    shim_receiver: Option<mpsc::Receiver<ShimRequest>>,
+    pending_shim: HashMap<CommandId, oneshot::Sender<ServerMessage>>,
 }
 
 impl OmniPaxosServer {
-    pub async fn new(config: OmniPaxosKVConfig) -> Self {
-        // Initialize OmniPaxos instance
+    pub async fn new(
+        config: OmniPaxosKVConfig,
+        shim_receiver: Option<mpsc::Receiver<ShimRequest>>,
+    ) -> Self {
         let storage: MemoryStorage<Command> = MemoryStorage::default();
         let omnipaxos_config: OmniPaxosConfig = config.clone().into();
         let omnipaxos_msg_buffer = Vec::with_capacity(omnipaxos_config.server_config.buffer_size);
         let omnipaxos = omnipaxos_config.build(storage).unwrap();
-        // Waits for client and server network connections to be established
         let network = Network::new(config.clone(), NETWORK_BATCH_SIZE).await;
         OmniPaxosServer {
             id: config.local.server_id,
@@ -44,18 +60,17 @@ impl OmniPaxosServer {
             omnipaxos_msg_buffer,
             peers: config.get_peers(config.local.server_id),
             config,
+            shim_receiver,
+            pending_shim: HashMap::new(),
         }
     }
 
     pub async fn run(&mut self) {
-        // Save config to output file
         self.save_output().expect("Failed to write to file");
         let mut client_msg_buf = Vec::with_capacity(NETWORK_BATCH_SIZE);
         let mut cluster_msg_buf = Vec::with_capacity(NETWORK_BATCH_SIZE);
-        // We don't use Omnipaxos leader election at first and instead force a specific initial leader
         self.establish_initial_leader(&mut cluster_msg_buf, &mut client_msg_buf)
             .await;
-        // Main event loop with leader election
         let mut election_interval = tokio::time::interval(ELECTION_TIMEOUT);
         loop {
             tokio::select! {
@@ -69,13 +84,34 @@ impl OmniPaxosServer {
                 _ = self.network.client_messages.recv_many(&mut client_msg_buf, NETWORK_BATCH_SIZE) => {
                     self.handle_client_messages(&mut client_msg_buf).await;
                 },
+                Some(shim_req) = async {
+                    match &mut self.shim_receiver {
+                        Some(rx) => rx.recv().await,
+                        None => std::future::pending().await,
+                    }
+                } => {
+                    self.handle_shim_request(shim_req);
+                },
             }
         }
     }
 
-    // Ensures cluster is connected and initial leader is promoted before returning.
-    // Once the leader is established it chooses a synchronization point which the
-    // followers relay to their clients to begin the experiment.
+    fn handle_shim_request(&mut self, req: ShimRequest) {
+        self.pending_shim.insert(req.command_id, req.responder);
+        match self.append_to_log(SHIM_CLIENT_ID, req.command_id, req.kv_command) {
+            Ok(()) => {}
+            Err(_) => {
+                if let Some(responder) = self.pending_shim.remove(&req.command_id) {
+                    let _ = responder.send(ServerMessage::Error(
+                        req.command_id,
+                        "unavailable".to_string(),
+                    ));
+                }
+            }
+        }
+        self.send_outgoing_msgs();
+    }
+
     async fn establish_initial_leader(
         &mut self,
         cluster_msg_buffer: &mut Vec<(NodeId, ClusterMessage)>,
@@ -112,7 +148,6 @@ impl OmniPaxosServer {
     }
 
     fn handle_decided_entries(&mut self) {
-        // TODO: Can use a read_raw here to avoid allocation
         let new_decided_idx = self.omnipaxos.get_decided_idx();
         if self.current_decided_idx < new_decided_idx {
             let decided_entries = self
@@ -133,15 +168,24 @@ impl OmniPaxosServer {
     }
 
     fn update_database_and_respond(&mut self, commands: Vec<Command>) {
-        // TODO: batching responses possible here (batch at handle_cluster_messages)
         for command in commands {
-            let read = self.database.handle_command(command.kv_cmd);
+            let result = self.database.handle_command(command.kv_cmd);
             if command.coordinator_id == self.id {
-                let response = match read {
-                    Some(read_result) => ServerMessage::Read(command.id, read_result),
-                    None => ServerMessage::Write(command.id),
+                let response = match result {
+                    CommandResult::WriteOk => ServerMessage::Write(command.id),
+                    CommandResult::ReadOk(value) => ServerMessage::Read(command.id, value),
+                    CommandResult::CasOk => ServerMessage::CasOk(command.id),
+                    CommandResult::CasFailed { current } => {
+                        ServerMessage::CasFailed(command.id, current)
+                    }
                 };
-                self.network.send_to_client(command.client_id, response);
+                if command.client_id == SHIM_CLIENT_ID {
+                    if let Some(responder) = self.pending_shim.remove(&command.id) {
+                        let _ = responder.send(response);
+                    }
+                } else {
+                    self.network.send_to_client(command.client_id, response);
+                }
             }
         }
     }
@@ -160,7 +204,7 @@ impl OmniPaxosServer {
         for (from, message) in messages.drain(..) {
             match message {
                 ClientMessage::Append(command_id, kv_command) => {
-                    self.append_to_log(from, command_id, kv_command)
+                    let _ = self.append_to_log(from, command_id, kv_command);
                 }
             }
         }
@@ -190,16 +234,21 @@ impl OmniPaxosServer {
         received_start_signal
     }
 
-    fn append_to_log(&mut self, from: ClientId, command_id: CommandId, kv_command: KVCommand) {
+    fn append_to_log(
+        &mut self,
+        from: ClientId,
+        command_id: CommandId,
+        kv_command: KVCommand,
+    ) -> Result<(), ()> {
         let command = Command {
             client_id: from,
             coordinator_id: self.id,
             id: command_id,
             kv_cmd: kv_command,
         };
-        self.omnipaxos
-            .append(command)
-            .expect("Append to Omnipaxos log failed");
+        self.omnipaxos.append(command).map_err(|e| {
+            warn!("Append to OmniPaxos log failed: {:?}", e);
+        })
     }
 
     fn send_cluster_start_signals(&mut self, start_time: Timestamp) {

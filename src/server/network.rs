@@ -51,8 +51,7 @@ fn get_addrs(config: OmniPaxosKVConfig) -> (SocketAddr, Vec<SocketAddr>) {
 }
 
 impl Network {
-    // Creates a new network with connections other server nodes in the cluster and any clients.
-    // Waits until connections to all servers and clients are established before resolving.
+
     pub async fn new(config: OmniPaxosKVConfig, batch_size: usize) -> Self {
         let (listen_address, node_addresses) = get_addrs(config.clone());
         let id = config.local.server_id;
@@ -156,7 +155,6 @@ impl Network {
         max_client_id_handle: Arc<Mutex<ClientId>>,
         batch_size: usize,
     ) {
-        // Identify connector's ID and type by handshake
         let mut registration_connection = frame_registration_connection(connection);
         let registration_message = registration_connection.next().await;
         let new_connection = match registration_message {
@@ -211,7 +209,6 @@ impl Network {
             let connection_sender = connection_sender.clone();
             let batch_size = self.batch_size;
             tokio::spawn(async move {
-                // Establish connection
                 let peer_connection = loop {
                     reconnect_interval.tick().await;
                     match TcpStream::connect(peer_address).await {
@@ -225,7 +222,6 @@ impl Network {
                         }
                     }
                 };
-                // Send handshake
                 let mut registration_connection = frame_registration_connection(peer_connection);
                 let handshake = RegistrationMessage::NodeRegister(my_id);
                 if let Err(err) = registration_connection.send(handshake).await {
@@ -233,7 +229,6 @@ impl Network {
                     return;
                 }
                 let underlying_stream = registration_connection.into_inner().into_inner();
-                // Create connection actor
                 let peer_actor =
                     PeerConnection::new(peer, underlying_stream, batch_size, cluster_sender);
                 let new_connection = NewConnection::ToPeer(peer_actor);
@@ -311,7 +306,6 @@ impl PeerConnection {
         incoming_messages: Sender<(NodeId, ClusterMessage)>,
     ) -> Self {
         let (reader, mut writer) = frame_cluster_connection(connection);
-        // Reader Actor
         let reader_task = tokio::spawn(async move {
             let mut buf_reader = reader.ready_chunks(batch_size);
             while let Some(messages) = buf_reader.next().await {
@@ -329,7 +323,6 @@ impl PeerConnection {
                 }
             }
         });
-        // Writer Actor
         let (message_tx, mut message_rx) = mpsc::unbounded_channel();
         let writer_task = tokio::spawn(async move {
             let mut buffer = Vec::with_capacity(batch_size);
@@ -383,7 +376,6 @@ impl ClientConnection {
         incoming_messages: Sender<(ClientId, ClientMessage)>,
     ) -> Self {
         let (reader, mut writer) = frame_servers_connection(connection);
-        // Reader Actor
         let reader_task = tokio::spawn(async move {
             let mut buf_reader = reader.ready_chunks(batch_size);
             while let Some(messages) = buf_reader.next().await {
@@ -395,7 +387,6 @@ impl ClientConnection {
                 }
             }
         });
-        // Writer Actor
         let (message_tx, mut message_rx) = mpsc::unbounded_channel();
         let writer_task = tokio::spawn(async move {
             let mut buffer = Vec::with_capacity(batch_size);

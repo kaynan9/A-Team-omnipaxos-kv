@@ -28,6 +28,13 @@ pub mod messages {
     pub enum ServerMessage {
         Write(CommandId),
         Read(CommandId, Option<String>),
+
+        // CAS support
+        CasOk(CommandId),
+        CasFailed(CommandId, Option<String>),
+
+        Error(CommandId, String),
+
         StartSignal(Timestamp),
     }
 
@@ -36,6 +43,9 @@ pub mod messages {
             match self {
                 ServerMessage::Write(id) => *id,
                 ServerMessage::Read(id, _) => *id,
+                ServerMessage::CasOk(id) => *id,
+                ServerMessage::CasFailed(id, _) => *id,
+                ServerMessage::Error(id, _) => *id,
                 ServerMessage::StartSignal(_) => unimplemented!(),
             }
         }
@@ -65,6 +75,9 @@ pub mod kv {
         Put(String, String),
         Delete(String),
         Get(String),
+
+        // CAS(key, expected, new_value)
+        Cas(String, Option<String>, String),
     }
 
     #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -77,6 +90,7 @@ pub mod kv {
         fn create(entries: &[Command]) -> Self {
             let mut snapshotted = HashMap::new();
             let mut deleted_keys: Vec<String> = Vec::new();
+
             for e in entries {
                 match &e.kv_cmd {
                     KVCommand::Put(key, value) => {
@@ -84,15 +98,23 @@ pub mod kv {
                     }
                     KVCommand::Delete(key) => {
                         if snapshotted.remove(key).is_none() {
-                            // key was not in the snapshot
                             deleted_keys.push(key.clone());
                         }
                     }
                     KVCommand::Get(_) => (),
+
+                    KVCommand::Cas(key, expected, new_value) => {
+                        let current = snapshotted.get(key).cloned();
+                        if &current == expected {
+                            snapshotted.insert(key.clone(), new_value.clone());
+                            deleted_keys.retain(|k| k != key);
+                        }
+                    }
                 }
             }
-            // remove keys that were put back
+
             deleted_keys.retain(|k| !snapshotted.contains_key(k));
+
             Self {
                 snapshotted,
                 deleted_keys,
@@ -142,6 +164,7 @@ pub mod utils {
         (),
         Bincode<ClusterMessage, ()>,
     >;
+
     pub type ToNodeConnection = Framed<
         FramedWrite<OwnedWriteHalf, LengthDelimitedCodec>,
         (),
@@ -158,13 +181,6 @@ pub mod utils {
             ToNodeConnection::new(sink, Bincode::default()),
         )
     }
-
-    // pub type ServerConnection = Framed<
-    //     CodecFramed<TcpStream, LengthDelimitedCodec>,
-    //     ServerMessage,
-    //     ClientMessage,
-    //     Bincode<ServerMessage, ClientMessage>,
-    // >;
 
     pub type FromServerConnection = Framed<
         FramedRead<OwnedReadHalf, LengthDelimitedCodec>,
@@ -205,11 +221,6 @@ pub mod utils {
             ToServerConnection::new(sink, Bincode::default()),
         )
     }
-
-    // pub fn frame_clients_connection(stream: TcpStream) -> ServerConnection {
-    //     let length_delimited = CodecFramed::new(stream, LengthDelimitedCodec::new());
-    //     Framed::new(length_delimited, Bincode::default())
-    // }
 
     pub fn frame_servers_connection(
         stream: TcpStream,

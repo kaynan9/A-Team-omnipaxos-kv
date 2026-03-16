@@ -1,0 +1,1416 @@
+[
+ {:process 0 :type :invoke :f :write :value ["k2" "v0"]}
+ {:process 1 :type :invoke :f :write :value ["k1" "v0"]}
+ {:process 4 :type :invoke :f :read :value ["k3" nil]}
+ {:process 3 :type :invoke :f :cas :value ["k1" nil "v0"]}
+ {:process 2 :type :invoke :f :cas :value ["k0" nil "v0"]}
+ {:process 2 :type :ok :f :cas :value ["k0" nil "v0"]}
+ {:process 0 :type :ok :f :write :value ["k2" "v0"]}
+ {:process 4 :type :ok :f :read :value ["k3" nil]}
+ {:process 3 :type :fail :f :cas :value ["k1" nil "v0"] :error "precondition-failed"}
+ {:process 1 :type :ok :f :write :value ["k1" "v0"]}
+ {:process 4 :type :invoke :f :write :value ["k0" "v1"]}
+ {:process 1 :type :invoke :f :cas :value ["k1" "v0" "v1"]}
+ {:process 0 :type :invoke :f :cas :value ["k3" nil "v1"]}
+ {:process 4 :type :ok :f :write :value ["k0" "v1"]}
+ {:process 0 :type :ok :f :cas :value ["k3" nil "v1"]}
+ {:process 1 :type :ok :f :cas :value ["k1" "v0" "v1"]}
+ {:process 2 :type :invoke :f :write :value ["k3" "v1"]}
+ {:process 2 :type :ok :f :write :value ["k3" "v1"]}
+ {:process 3 :type :invoke :f :read :value ["k0" nil]}
+ {:process 0 :type :invoke :f :read :value ["k4" nil]}
+ {:process 4 :type :invoke :f :write :value ["k1" "v2"]}
+ {:process 0 :type :ok :f :read :value ["k4" nil]}
+ {:process 3 :type :ok :f :read :value ["k0" "v1"]}
+ {:process 4 :type :ok :f :write :value ["k1" "v2"]}
+ {:process 1 :type :invoke :f :write :value ["k0" "v2"]}
+ {:process 1 :type :ok :f :write :value ["k0" "v2"]}
+ {:process 2 :type :invoke :f :write :value ["k0" "v2"]}
+ {:process 0 :type :invoke :f :read :value ["k2" nil]}
+ {:process 2 :type :ok :f :write :value ["k0" "v2"]}
+ {:process 0 :type :ok :f :read :value ["k2" "v0"]}
+ {:process 3 :type :invoke :f :write :value ["k1" "v2"]}
+ {:process 4 :type :invoke :f :write :value ["k3" "v3"]}
+ {:process 2 :type :invoke :f :write :value ["k1" "v3"]}
+ {:process 4 :type :ok :f :write :value ["k3" "v3"]}
+ {:process 3 :type :ok :f :write :value ["k1" "v2"]}
+ {:process 2 :type :ok :f :write :value ["k1" "v3"]}
+ {:process 0 :type :invoke :f :read :value ["k4" nil]}
+ {:process 4 :type :invoke :f :write :value ["k1" "v4"]}
+ {:process 1 :type :invoke :f :write :value ["k0" "v3"]}
+ {:process 4 :type :ok :f :write :value ["k1" "v4"]}
+ {:process 1 :type :ok :f :write :value ["k0" "v3"]}
+ {:process 0 :type :ok :f :read :value ["k4" nil]}
+ {:process 3 :type :invoke :f :write :value ["k2" "v3"]}
+ {:process 1 :type :invoke :f :cas :value ["k0" "v3" "v4"]}
+ {:process 2 :type :invoke :f :write :value ["k1" "v4"]}
+ {:process 4 :type :invoke :f :write :value ["k4" "v5"]}
+ {:process 2 :type :ok :f :write :value ["k1" "v4"]}
+ {:process 3 :type :ok :f :write :value ["k2" "v3"]}
+ {:process 4 :type :ok :f :write :value ["k4" "v5"]}
+ {:process 1 :type :ok :f :cas :value ["k0" "v3" "v4"]}
+ {:process 0 :type :invoke :f :cas :value ["k1" nil "v5"]}
+ {:process 0 :type :fail :f :cas :value ["k1" nil "v5"] :error "precondition-failed"}
+ {:process 1 :type :invoke :f :write :value ["k4" "v5"]}
+ {:process 2 :type :invoke :f :read :value ["k3" nil]}
+ {:process 2 :type :ok :f :read :value ["k3" "v3"]}
+ {:process 1 :type :ok :f :write :value ["k4" "v5"]}
+ {:process 0 :type :invoke :f :cas :value ["k4" nil "v6"]}
+ {:process 4 :type :invoke :f :write :value ["k1" "v6"]}
+ {:process 3 :type :invoke :f :write :value ["k2" "v4"]}
+ {:process 0 :type :fail :f :cas :value ["k4" nil "v6"] :error "precondition-failed"}
+ {:process 4 :type :ok :f :write :value ["k1" "v6"]}
+ {:process 3 :type :ok :f :write :value ["k2" "v4"]}
+ {:process 2 :type :invoke :f :read :value ["k0" nil]}
+ {:process 1 :type :invoke :f :read :value ["k0" nil]}
+ {:process 2 :type :ok :f :read :value ["k0" "v4"]}
+ {:process 1 :type :ok :f :read :value ["k0" "v4"]}
+ {:process 3 :type :invoke :f :write :value ["k3" "v5"]}
+ {:process 3 :type :ok :f :write :value ["k3" "v5"]}
+ {:process 0 :type :invoke :f :read :value ["k3" nil]}
+ {:process 4 :type :invoke :f :read :value ["k0" nil]}
+ {:process 1 :type :invoke :f :read :value ["k2" nil]}
+ {:process 4 :type :ok :f :read :value ["k0" "v4"]}
+ {:process 1 :type :ok :f :read :value ["k2" "v4"]}
+ {:process 0 :type :ok :f :read :value ["k3" "v5"]}
+ {:process 3 :type :invoke :f :read :value ["k3" nil]}
+ {:process 2 :type :invoke :f :write :value ["k2" "v7"]}
+ {:process 2 :type :ok :f :write :value ["k2" "v7"]}
+ {:process 3 :type :ok :f :read :value ["k3" "v5"]}
+ {:process 0 :type :invoke :f :read :value ["k0" nil]}
+ {:process 4 :type :invoke :f :read :value ["k0" nil]}
+ {:process 0 :type :ok :f :read :value ["k0" "v4"]}
+ {:process 4 :type :ok :f :read :value ["k0" "v4"]}
+ {:process 0 :type :invoke :f :read :value ["k3" nil]}
+ {:process 2 :type :invoke :f :read :value ["k0" nil]}
+ {:process 2 :type :ok :f :read :value ["k0" "v4"]}
+ {:process 0 :type :ok :f :read :value ["k3" "v5"]}
+ {:process 3 :type :invoke :f :read :value ["k2" nil]}
+ {:process 1 :type :invoke :f :read :value ["k0" nil]}
+ {:process 3 :type :ok :f :read :value ["k2" "v7"]}
+ {:process 1 :type :ok :f :read :value ["k0" "v4"]}
+ {:process 4 :type :invoke :f :write :value ["k1" "v9"]}
+ {:process 2 :type :invoke :f :read :value ["k4" nil]}
+ {:process 2 :type :ok :f :read :value ["k4" "v5"]}
+ {:process 4 :type :ok :f :write :value ["k1" "v9"]}
+ {:process 3 :type :invoke :f :cas :value ["k4" nil "v8"]}
+ {:process 0 :type :invoke :f :write :value ["k4" "v10"]}
+ {:process 3 :type :fail :f :cas :value ["k4" nil "v8"] :error "precondition-failed"}
+ {:process 0 :type :ok :f :write :value ["k4" "v10"]}
+ {:process 4 :type :invoke :f :write :value ["k1" "v10"]}
+ {:process 1 :type :invoke :f :write :value ["k3" "v9"]}
+ {:process 2 :type :invoke :f :read :value ["k1" nil]}
+ {:process 4 :type :ok :f :write :value ["k1" "v10"]}
+ {:process 1 :type :ok :f :write :value ["k3" "v9"]}
+ {:process 2 :type :ok :f :read :value ["k1" "v10"]}
+ {:process 3 :type :invoke :f :write :value ["k0" "v9"]}
+ {:process 0 :type :invoke :f :write :value ["k3" "v11"]}
+ {:process 3 :type :ok :f :write :value ["k0" "v9"]}
+ {:process 0 :type :ok :f :write :value ["k3" "v11"]}
+ {:process 4 :type :invoke :f :write :value ["k2" "v11"]}
+ {:process 2 :type :invoke :f :write :value ["k3" "v11"]}
+ {:process 1 :type :invoke :f :write :value ["k2" "v10"]}
+ {:process 2 :type :ok :f :write :value ["k3" "v11"]}
+ {:process 4 :type :ok :f :write :value ["k2" "v11"]}
+ {:process 1 :type :ok :f :write :value ["k2" "v10"]}
+ {:process 4 :type :invoke :f :write :value ["k3" "v12"]}
+ {:process 0 :type :invoke :f :write :value ["k0" "v12"]}
+ {:process 3 :type :invoke :f :write :value ["k1" "v10"]}
+ {:process 3 :type :ok :f :write :value ["k1" "v10"]}
+ {:process 0 :type :ok :f :write :value ["k0" "v12"]}
+ {:process 4 :type :ok :f :write :value ["k3" "v12"]}
+ {:process 2 :type :invoke :f :read :value ["k4" nil]}
+ {:process 1 :type :invoke :f :write :value ["k3" "v11"]}
+ {:process 2 :type :ok :f :read :value ["k4" "v10"]}
+ {:process 1 :type :ok :f :write :value ["k3" "v11"]}
+ {:process 0 :type :invoke :f :write :value ["k0" "v13"]}
+ {:process 4 :type :invoke :f :write :value ["k2" "v13"]}
+ {:process 4 :type :ok :f :write :value ["k2" "v13"]}
+ {:process 0 :type :ok :f :write :value ["k0" "v13"]}
+ {:process 3 :type :invoke :f :write :value ["k3" "v11"]}
+ {:process 2 :type :invoke :f :cas :value ["k1" "v4" "v13"]}
+ {:process 2 :type :fail :f :cas :value ["k1" "v4" "v13"] :error "precondition-failed"}
+ {:process 3 :type :ok :f :write :value ["k3" "v11"]}
+ {:process 1 :type :invoke :f :read :value ["k4" nil]}
+ {:process 1 :type :ok :f :read :value ["k4" "v10"]}
+ {:process 3 :type :invoke :f :read :value ["k2" nil]}
+ {:process 0 :type :invoke :f :cas :value ["k1" nil "v14"]}
+ {:process 4 :type :invoke :f :write :value ["k2" "v14"]}
+ {:process 3 :type :ok :f :read :value ["k2" "v14"]}
+ {:process 0 :type :fail :f :cas :value ["k1" nil "v14"] :error "precondition-failed"}
+ {:process 4 :type :ok :f :write :value ["k2" "v14"]}
+ {:process 2 :type :invoke :f :write :value ["k0" "v14"]}
+ {:process 3 :type :invoke :f :write :value ["k4" "v13"]}
+ {:process 2 :type :ok :f :write :value ["k0" "v14"]}
+ {:process 3 :type :ok :f :write :value ["k4" "v13"]}
+ {:process 4 :type :invoke :f :write :value ["k1" "v15"]}
+ {:process 0 :type :invoke :f :read :value ["k3" nil]}
+ {:process 1 :type :invoke :f :read :value ["k4" nil]}
+ {:process 0 :type :ok :f :read :value ["k3" "v11"]}
+ {:process 1 :type :ok :f :read :value ["k4" "v13"]}
+ {:process 4 :type :ok :f :write :value ["k1" "v15"]}
+ {:process 2 :type :invoke :f :write :value ["k2" "v15"]}
+ {:process 3 :type :invoke :f :read :value ["k3" nil]}
+ {:process 0 :type :invoke :f :write :value ["k4" "v16"]}
+ {:process 4 :type :invoke :f :write :value ["k1" "v16"]}
+ {:process 2 :type :ok :f :write :value ["k2" "v15"]}
+ {:process 0 :type :ok :f :write :value ["k4" "v16"]}
+ {:process 4 :type :ok :f :write :value ["k1" "v16"]}
+ {:process 3 :type :ok :f :read :value ["k3" "v11"]}
+ {:process 1 :type :invoke :f :write :value ["k0" "v14"]}
+ {:process 2 :type :invoke :f :cas :value ["k1" "v4" "v16"]}
+ {:process 0 :type :invoke :f :cas :value ["k1" nil "v17"]}
+ {:process 1 :type :ok :f :write :value ["k0" "v14"]}
+ {:process 2 :type :fail :f :cas :value ["k1" "v4" "v16"] :error "precondition-failed"}
+ {:process 0 :type :fail :f :cas :value ["k1" nil "v17"] :error "precondition-failed"}
+ {:process 3 :type :invoke :f :write :value ["k0" "v15"]}
+ {:process 3 :type :ok :f :write :value ["k0" "v15"]}
+ {:process 3 :type :invoke :f :write :value ["k4" "v16"]}
+ {:process 0 :type :invoke :f :read :value ["k1" nil]}
+ {:process 4 :type :invoke :f :write :value ["k1" "v17"]}
+ {:process 0 :type :ok :f :read :value ["k1" "v16"]}
+ {:process 3 :type :ok :f :write :value ["k4" "v16"]}
+ {:process 4 :type :ok :f :write :value ["k1" "v17"]}
+ {:process 2 :type :invoke :f :cas :value ["k2" "v15" "v17"]}
+ {:process 1 :type :invoke :f :write :value ["k0" "v15"]}
+ {:process 0 :type :invoke :f :read :value ["k2" nil]}
+ {:process 2 :type :ok :f :cas :value ["k2" "v15" "v17"]}
+ {:process 1 :type :ok :f :write :value ["k0" "v15"]}
+ {:process 3 :type :invoke :f :write :value ["k1" "v17"]}
+ {:process 0 :type :ok :f :read :value ["k2" "v17"]}
+ {:process 3 :type :ok :f :write :value ["k1" "v17"]}
+ {:process 4 :type :invoke :f :read :value ["k1" nil]}
+ {:process 2 :type :invoke :f :write :value ["k1" "v18"]}
+ {:process 2 :type :ok :f :write :value ["k1" "v18"]}
+ {:process 4 :type :ok :f :read :value ["k1" "v18"]}
+ {:process 0 :type :invoke :f :write :value ["k3" "v20"]}
+ {:process 2 :type :invoke :f :read :value ["k3" nil]}
+ {:process 0 :type :ok :f :write :value ["k3" "v20"]}
+ {:process 1 :type :invoke :f :read :value ["k3" nil]}
+ {:process 2 :type :ok :f :read :value ["k3" "v20"]}
+ {:process 1 :type :ok :f :read :value ["k3" "v20"]}
+ {:process 4 :type :invoke :f :write :value ["k4" "v19"]}
+ {:process 3 :type :invoke :f :write :value ["k0" "v18"]}
+ {:process 0 :type :invoke :f :read :value ["k0" nil]}
+ {:process 4 :type :ok :f :write :value ["k4" "v19"]}
+ {:process 0 :type :ok :f :read :value ["k0" "v18"]}
+ {:process 3 :type :ok :f :write :value ["k0" "v18"]}
+ {:process 1 :type :invoke :f :cas :value ["k4" "v5" "v17"]}
+ {:process 2 :type :invoke :f :cas :value ["k4" nil "v20"]}
+ {:process 1 :type :fail :f :cas :value ["k4" "v5" "v17"] :error "precondition-failed"}
+ {:process 2 :type :fail :f :cas :value ["k4" nil "v20"] :error "precondition-failed"}
+ {:process 4 :type :invoke :f :read :value ["k2" nil]}
+ {:process 4 :type :ok :f :read :value ["k2" "v17"]}
+ {:process 0 :type :invoke :f :write :value ["k3" "v22"]}
+ {:process 4 :type :invoke :f :cas :value ["k1" "v17" "v21"]}
+ {:process 1 :type :invoke :f :write :value ["k2" "v18"]}
+ {:process 3 :type :invoke :f :cas :value ["k2" "v4" "v19"]}
+ {:process 3 :type :fail :f :cas :value ["k2" "v4" "v19"] :error "precondition-failed"}
+ {:process 1 :type :ok :f :write :value ["k2" "v18"]}
+ {:process 0 :type :ok :f :write :value ["k3" "v22"]}
+ {:process 4 :type :fail :f :cas :value ["k1" "v17" "v21"] :error "precondition-failed"}
+ {:process 1 :type :invoke :f :read :value ["k1" nil]}
+ {:process 2 :type :invoke :f :write :value ["k4" "v21"]}
+ {:process 3 :type :invoke :f :read :value ["k3" nil]}
+ {:process 2 :type :ok :f :write :value ["k4" "v21"]}
+ {:process 3 :type :ok :f :read :value ["k3" "v22"]}
+ {:process 1 :type :ok :f :read :value ["k1" "v18"]}
+ {:process 4 :type :invoke :f :read :value ["k4" nil]}
+ {:process 1 :type :invoke :f :read :value ["k4" nil]}
+ {:process 3 :type :invoke :f :cas :value ["k0" "v18" "v21"]}
+ {:process 4 :type :ok :f :read :value ["k4" "v21"]}
+ {:process 1 :type :ok :f :read :value ["k4" "v21"]}
+ {:process 3 :type :ok :f :cas :value ["k0" "v18" "v21"]}
+ {:process 4 :type :invoke :f :cas :value ["k2" "v14" "v23"]}
+ {:process 0 :type :invoke :f :read :value ["k3" nil]}
+ {:process 4 :type :fail :f :cas :value ["k2" "v14" "v23"] :error "precondition-failed"}
+ {:process 0 :type :ok :f :read :value ["k3" "v22"]}
+ {:process 2 :type :invoke :f :write :value ["k3" "v22"]}
+ {:process 3 :type :invoke :f :write :value ["k0" "v22"]}
+ {:process 2 :type :ok :f :write :value ["k3" "v22"]}
+ {:process 3 :type :ok :f :write :value ["k0" "v22"]}
+ {:process 4 :type :invoke :f :cas :value ["k1" "v17" "v24"]}
+ {:process 1 :type :invoke :f :read :value ["k1" nil]}
+ {:process 1 :type :ok :f :read :value ["k1" "v18"]}
+ {:process 4 :type :fail :f :cas :value ["k1" "v17" "v24"] :error "precondition-failed"}
+ {:process 0 :type :invoke :f :cas :value ["k1" nil "v24"]}
+ {:process 3 :type :invoke :f :read :value ["k1" nil]}
+ {:process 0 :type :fail :f :cas :value ["k1" nil "v24"] :error "precondition-failed"}
+ {:process 3 :type :ok :f :read :value ["k1" "v18"]}
+ {:process 1 :type :invoke :f :read :value ["k0" nil]}
+ {:process 2 :type :invoke :f :write :value ["k2" "v23"]}
+ {:process 1 :type :ok :f :read :value ["k0" "v22"]}
+ {:process 2 :type :ok :f :write :value ["k2" "v23"]}
+ {:process 3 :type :invoke :f :read :value ["k3" nil]}
+ {:process 0 :type :invoke :f :write :value ["k0" "v25"]}
+ {:process 1 :type :invoke :f :write :value ["k4" "v23"]}
+ {:process 1 :type :ok :f :write :value ["k4" "v23"]}
+ {:process 0 :type :ok :f :write :value ["k0" "v25"]}
+ {:process 3 :type :ok :f :read :value ["k3" "v22"]}
+ {:process 4 :type :invoke :f :read :value ["k2" nil]}
+ {:process 1 :type :invoke :f :cas :value ["k3" "v11" "v24"]}
+ {:process 2 :type :invoke :f :read :value ["k1" nil]}
+ {:process 4 :type :ok :f :read :value ["k2" "v23"]}
+ {:process 1 :type :fail :f :cas :value ["k3" "v11" "v24"] :error "precondition-failed"}
+ {:process 2 :type :ok :f :read :value ["k1" "v18"]}
+ {:process 1 :type :invoke :f :read :value ["k3" nil]}
+ {:process 0 :type :invoke :f :read :value ["k0" nil]}
+ {:process 3 :type :invoke :f :write :value ["k0" "v25"]}
+ {:process 0 :type :ok :f :read :value ["k0" "v25"]}
+ {:process 1 :type :ok :f :read :value ["k3" "v22"]}
+ {:process 3 :type :ok :f :write :value ["k0" "v25"]}
+ {:process 1 :type :invoke :f :write :value ["k0" "v26"]}
+ {:process 4 :type :invoke :f :cas :value ["k1" "v17" "v26"]}
+ {:process 1 :type :ok :f :write :value ["k0" "v26"]}
+ {:process 4 :type :fail :f :cas :value ["k1" "v17" "v26"] :error "precondition-failed"}
+ {:process 1 :type :invoke :f :write :value ["k0" "v27"]}
+ {:process 2 :type :invoke :f :cas :value ["k1" "v18" "v25"]}
+ {:process 4 :type :invoke :f :read :value ["k0" nil]}
+ {:process 2 :type :ok :f :cas :value ["k1" "v18" "v25"]}
+ {:process 1 :type :ok :f :write :value ["k0" "v27"]}
+ {:process 4 :type :ok :f :read :value ["k0" "v27"]}
+ {:process 4 :type :invoke :f :write :value ["k1" "v28"]}
+ {:process 3 :type :invoke :f :read :value ["k4" nil]}
+ {:process 4 :type :ok :f :write :value ["k1" "v28"]}
+ {:process 3 :type :ok :f :read :value ["k4" "v23"]}
+ {:process 0 :type :invoke :f :write :value ["k2" "v27"]}
+ {:process 0 :type :ok :f :write :value ["k2" "v27"]}
+ {:process 1 :type :invoke :f :cas :value ["k4" "v23" "v28"]}
+ {:process 2 :type :invoke :f :read :value ["k4" nil]}
+ {:process 2 :type :ok :f :read :value ["k4" "v23"]}
+ {:process 1 :type :ok :f :cas :value ["k4" "v23" "v28"]}
+ {:process 4 :type :invoke :f :read :value ["k3" nil]}
+ {:process 3 :type :invoke :f :cas :value ["k1" "v17" "v27"]}
+ {:process 4 :type :ok :f :read :value ["k3" "v22"]}
+ {:process 3 :type :fail :f :cas :value ["k1" "v17" "v27"] :error "precondition-failed"}
+ {:process 1 :type :invoke :f :cas :value ["k0" "v27" "v29"]}
+ {:process 3 :type :invoke :f :cas :value ["k0" "v25" "v28"]}
+ {:process 4 :type :invoke :f :read :value ["k4" nil]}
+ {:process 1 :type :ok :f :cas :value ["k0" "v27" "v29"]}
+ {:process 4 :type :ok :f :read :value ["k4" "v28"]}
+ {:process 3 :type :fail :f :cas :value ["k0" "v25" "v28"] :error "precondition-failed"}
+ {:process 0 :type :invoke :f :write :value ["k3" "v28"]}
+ {:process 2 :type :invoke :f :read :value ["k0" nil]}
+ {:process 0 :type :ok :f :write :value ["k3" "v28"]}
+ {:process 4 :type :invoke :f :write :value ["k4" "v31"]}
+ {:process 2 :type :ok :f :read :value ["k0" "v29"]}
+ {:process 4 :type :ok :f :write :value ["k4" "v31"]}
+ {:process 3 :type :invoke :f :write :value ["k1" "v29"]}
+ {:process 1 :type :invoke :f :write :value ["k0" "v30"]}
+ {:process 1 :type :ok :f :write :value ["k0" "v30"]}
+ {:process 3 :type :ok :f :write :value ["k1" "v29"]}
+ {:process 4 :type :invoke :f :read :value ["k1" nil]}
+ {:process 1 :type :invoke :f :cas :value ["k2" "v18" "v31"]}
+ {:process 2 :type :invoke :f :read :value ["k3" nil]}
+ {:process 0 :type :invoke :f :write :value ["k2" "v29"]}
+ {:process 1 :type :fail :f :cas :value ["k2" "v18" "v31"] :error "precondition-failed"}
+ {:process 4 :type :ok :f :read :value ["k1" "v29"]}
+ {:process 2 :type :ok :f :read :value ["k3" "v28"]}
+ {:process 0 :type :ok :f :write :value ["k2" "v29"]}
+ {:process 4 :type :invoke :f :cas :value ["k1" "v28" "v33"]}
+ {:process 4 :type :fail :f :cas :value ["k1" "v28" "v33"] :error "precondition-failed"}
+ {:process 3 :type :invoke :f :read :value ["k4" nil]}
+ {:process 4 :type :invoke :f :read :value ["k4" nil]}
+ {:process 3 :type :ok :f :read :value ["k4" "v31"]}
+ {:process 4 :type :ok :f :read :value ["k4" "v31"]}
+ {:process 1 :type :invoke :f :read :value ["k4" nil]}
+ {:process 0 :type :invoke :f :write :value ["k1" "v30"]}
+ {:process 1 :type :ok :f :read :value ["k4" "v31"]}
+ {:process 0 :type :ok :f :write :value ["k1" "v30"]}
+ {:process 2 :type :invoke :f :read :value ["k3" nil]}
+ {:process 3 :type :invoke :f :write :value ["k0" "v31"]}
+ {:process 2 :type :ok :f :read :value ["k3" "v28"]}
+ {:process 3 :type :ok :f :write :value ["k0" "v31"]}
+ {:process 4 :type :invoke :f :read :value ["k2" nil]}
+ {:process 3 :type :invoke :f :read :value ["k1" nil]}
+ {:process 4 :type :ok :f :read :value ["k2" "v29"]}
+ {:process 3 :type :ok :f :read :value ["k1" "v30"]}
+ {:process 0 :type :invoke :f :write :value ["k4" "v31"]}
+ {:process 4 :type :invoke :f :read :value ["k3" nil]}
+ {:process 1 :type :invoke :f :write :value ["k1" "v33"]}
+ {:process 0 :type :ok :f :write :value ["k4" "v31"]}
+ {:process 4 :type :ok :f :read :value ["k3" "v28"]}
+ {:process 1 :type :ok :f :write :value ["k1" "v33"]}
+ {:process 2 :type :invoke :f :cas :value ["k0" "v14" "v30"]}
+ {:process 0 :type :invoke :f :write :value ["k2" "v32"]}
+ {:process 2 :type :fail :f :cas :value ["k0" "v14" "v30"] :error "precondition-failed"}
+ {:process 0 :type :ok :f :write :value ["k2" "v32"]}
+ {:process 3 :type :invoke :f :cas :value ["k4" "v16" "v33"]}
+ {:process 1 :type :invoke :f :write :value ["k3" "v34"]}
+ {:process 4 :type :invoke :f :write :value ["k0" "v37"]}
+ {:process 1 :type :ok :f :write :value ["k3" "v34"]}
+ {:process 4 :type :ok :f :write :value ["k0" "v37"]}
+ {:process 3 :type :fail :f :cas :value ["k4" "v16" "v33"] :error "precondition-failed"}
+ {:process 1 :type :invoke :f :read :value ["k0" nil]}
+ {:process 4 :type :invoke :f :read :value ["k0" nil]}
+ {:process 0 :type :invoke :f :write :value ["k4" "v33"]}
+ {:process 1 :type :ok :f :read :value ["k0" "v37"]}
+ {:process 0 :type :ok :f :write :value ["k4" "v33"]}
+ {:process 4 :type :ok :f :read :value ["k0" "v37"]}
+ {:process 2 :type :invoke :f :read :value ["k3" nil]}
+ {:process 2 :type :ok :f :read :value ["k3" "v34"]}
+ {:process 4 :type :invoke :f :cas :value ["k4" "v31" "v39"]}
+ {:process 1 :type :invoke :f :read :value ["k2" nil]}
+ {:process 3 :type :invoke :f :cas :value ["k0" "v31" "v34"]}
+ {:process 1 :type :ok :f :read :value ["k2" "v32"]}
+ {:process 4 :type :fail :f :cas :value ["k4" "v31" "v39"] :error "precondition-failed"}
+ {:process 3 :type :fail :f :cas :value ["k0" "v31" "v34"] :error "precondition-failed"}
+ {:process 0 :type :invoke :f :cas :value ["k0" "v25" "v34"]}
+ {:process 1 :type :invoke :f :cas :value ["k3" "v34" "v37"]}
+ {:process 2 :type :invoke :f :cas :value ["k2" "v23" "v32"]}
+ {:process 0 :type :fail :f :cas :value ["k0" "v25" "v34"] :error "precondition-failed"}
+ {:process 2 :type :fail :f :cas :value ["k2" "v23" "v32"] :error "precondition-failed"}
+ {:process 1 :type :ok :f :cas :value ["k3" "v34" "v37"]}
+ {:process 3 :type :invoke :f :write :value ["k2" "v35"]}
+ {:process 4 :type :invoke :f :read :value ["k3" nil]}
+ {:process 0 :type :invoke :f :write :value ["k4" "v35"]}
+ {:process 3 :type :ok :f :write :value ["k2" "v35"]}
+ {:process 0 :type :ok :f :write :value ["k4" "v35"]}
+ {:process 4 :type :ok :f :read :value ["k3" "v37"]}
+ {:process 2 :type :invoke :f :write :value ["k0" "v33"]}
+ {:process 1 :type :invoke :f :cas :value ["k0" "v30" "v38"]}
+ {:process 4 :type :invoke :f :read :value ["k0" nil]}
+ {:process 2 :type :ok :f :write :value ["k0" "v33"]}
+ {:process 1 :type :fail :f :cas :value ["k0" "v30" "v38"] :error "precondition-failed"}
+ {:process 0 :type :invoke :f :read :value ["k4" nil]}
+ {:process 4 :type :ok :f :read :value ["k0" "v33"]}
+ {:process 0 :type :ok :f :read :value ["k4" "v35"]}
+ {:process 2 :type :invoke :f :cas :value ["k1" "v25" "v34"]}
+ {:process 4 :type :invoke :f :write :value ["k2" "v42"]}
+ {:process 3 :type :invoke :f :read :value ["k2" nil]}
+ {:process 2 :type :fail :f :cas :value ["k1" "v25" "v34"] :error "precondition-failed"}
+ {:process 4 :type :ok :f :write :value ["k2" "v42"]}
+ {:process 3 :type :ok :f :read :value ["k2" "v42"]}
+ {:process 1 :type :invoke :f :read :value ["k0" nil]}
+ {:process 1 :type :ok :f :read :value ["k0" "v33"]}
+ {:process 2 :type :invoke :f :write :value ["k1" "v35"]}
+ {:process 3 :type :invoke :f :write :value ["k2" "v37"]}
+ {:process 0 :type :invoke :f :write :value ["k1" "v37"]}
+ {:process 1 :type :invoke :f :read :value ["k4" nil]}
+ {:process 2 :type :ok :f :write :value ["k1" "v35"]}
+ {:process 1 :type :ok :f :read :value ["k4" "v35"]}
+ {:process 0 :type :ok :f :write :value ["k1" "v37"]}
+ {:process 3 :type :ok :f :write :value ["k2" "v37"]}
+ {:process 4 :type :invoke :f :cas :value ["k2" "v42" "v43"]}
+ {:process 4 :type :fail :f :cas :value ["k2" "v42" "v43"] :error "precondition-failed"}
+ {:process 4 :type :invoke :f :read :value ["k3" nil]}
+ {:process 3 :type :invoke :f :write :value ["k2" "v38"]}
+ {:process 2 :type :invoke :f :write :value ["k2" "v36"]}
+ {:process 2 :type :ok :f :write :value ["k2" "v36"]}
+ {:process 4 :type :ok :f :read :value ["k3" "v37"]}
+ {:process 3 :type :ok :f :write :value ["k2" "v38"]}
+ {:process 1 :type :invoke :f :read :value ["k3" nil]}
+ {:process 2 :type :invoke :f :read :value ["k4" nil]}
+ {:process 0 :type :invoke :f :cas :value ["k0" "v25" "v38"]}
+ {:process 3 :type :invoke :f :write :value ["k2" "v39"]}
+ {:process 2 :type :ok :f :read :value ["k4" "v35"]}
+ {:process 0 :type :fail :f :cas :value ["k0" "v25" "v38"] :error "precondition-failed"}
+ {:process 1 :type :ok :f :read :value ["k3" "v37"]}
+ {:process 3 :type :ok :f :write :value ["k2" "v39"]}
+ {:process 4 :type :invoke :f :read :value ["k1" nil]}
+ {:process 4 :type :ok :f :read :value ["k1" "v37"]}
+ {:process 1 :type :invoke :f :read :value ["k4" nil]}
+ {:process 0 :type :invoke :f :read :value ["k0" nil]}
+ {:process 1 :type :ok :f :read :value ["k4" "v35"]}
+ {:process 0 :type :ok :f :read :value ["k0" "v33"]}
+ {:process 2 :type :invoke :f :read :value ["k4" nil]}
+ {:process 2 :type :ok :f :read :value ["k4" "v35"]}
+ {:process 0 :type :invoke :f :write :value ["k1" "v40"]}
+ {:process 3 :type :invoke :f :write :value ["k2" "v40"]}
+ {:process 4 :type :invoke :f :read :value ["k2" nil]}
+ {:process 3 :type :ok :f :write :value ["k2" "v40"]}
+ {:process 0 :type :ok :f :write :value ["k1" "v40"]}
+ {:process 4 :type :ok :f :read :value ["k2" "v40"]}
+ {:process 1 :type :invoke :f :write :value ["k2" "v43"]}
+ {:process 2 :type :invoke :f :read :value ["k3" nil]}
+ {:process 2 :type :ok :f :read :value ["k3" "v37"]}
+ {:process 1 :type :ok :f :write :value ["k2" "v43"]}
+ {:process 4 :type :invoke :f :read :value ["k3" nil]}
+ {:process 4 :type :ok :f :read :value ["k3" "v37"]}
+ {:process 1 :type :invoke :f :write :value ["k4" "v44"]}
+ {:process 3 :type :invoke :f :read :value ["k1" nil]}
+ {:process 2 :type :invoke :f :write :value ["k4" "v40"]}
+ {:process 0 :type :invoke :f :read :value ["k3" nil]}
+ {:process 2 :type :ok :f :write :value ["k4" "v40"]}
+ {:process 0 :type :ok :f :read :value ["k3" "v37"]}
+ {:process 3 :type :ok :f :read :value ["k1" "v40"]}
+ {:process 1 :type :ok :f :write :value ["k4" "v44"]}
+ {:process 4 :type :invoke :f :write :value ["k4" "v48"]}
+ {:process 4 :type :ok :f :write :value ["k4" "v48"]}
+ {:process 3 :type :invoke :f :read :value ["k2" nil]}
+ {:process 4 :type :invoke :f :read :value ["k4" nil]}
+ {:process 2 :type :invoke :f :read :value ["k2" nil]}
+ {:process 3 :type :ok :f :read :value ["k2" "v43"]}
+ {:process 2 :type :ok :f :read :value ["k2" "v43"]}
+ {:process 4 :type :ok :f :read :value ["k4" "v48"]}
+ {:process 0 :type :invoke :f :read :value ["k2" nil]}
+ {:process 1 :type :invoke :f :write :value ["k3" "v45"]}
+ {:process 0 :type :ok :f :read :value ["k2" "v43"]}
+ {:process 1 :type :ok :f :write :value ["k3" "v45"]}
+ {:process 3 :type :invoke :f :read :value ["k2" nil]}
+ {:process 4 :type :invoke :f :write :value ["k1" "v50"]}
+ {:process 0 :type :invoke :f :read :value ["k3" nil]}
+ {:process 3 :type :ok :f :read :value ["k2" "v43"]}
+ {:process 0 :type :ok :f :read :value ["k3" "v45"]}
+ {:process 4 :type :ok :f :write :value ["k1" "v50"]}
+ {:process 2 :type :invoke :f :write :value ["k3" "v42"]}
+ {:process 0 :type :invoke :f :write :value ["k0" "v44"]}
+ {:process 1 :type :invoke :f :cas :value ["k3" "v45" "v46"]}
+ {:process 3 :type :invoke :f :write :value ["k4" "v44"]}
+ {:process 2 :type :ok :f :write :value ["k3" "v42"]}
+ {:process 1 :type :fail :f :cas :value ["k3" "v45" "v46"] :error "precondition-failed"}
+ {:process 0 :type :ok :f :write :value ["k0" "v44"]}
+ {:process 3 :type :ok :f :write :value ["k4" "v44"]}
+ {:process 4 :type :invoke :f :read :value ["k2" nil]}
+ {:process 3 :type :invoke :f :read :value ["k4" nil]}
+ {:process 4 :type :ok :f :read :value ["k2" "v43"]}
+ {:process 3 :type :ok :f :read :value ["k4" "v44"]}
+ {:process 0 :type :invoke :f :write :value ["k2" "v45"]}
+ {:process 0 :type :ok :f :write :value ["k2" "v45"]}
+ {:process 1 :type :invoke :f :cas :value ["k4" "v44" "v47"]}
+ {:process 2 :type :invoke :f :cas :value ["k3" "v42" "v43"]}
+ {:process 1 :type :ok :f :cas :value ["k4" "v44" "v47"]}
+ {:process 4 :type :invoke :f :write :value ["k2" "v52"]}
+ {:process 2 :type :ok :f :cas :value ["k3" "v42" "v43"]}
+ {:process 4 :type :ok :f :write :value ["k2" "v52"]}
+ {:process 0 :type :invoke :f :write :value ["k2" "v46"]}
+ {:process 1 :type :invoke :f :cas :value ["k3" "v45" "v48"]}
+ {:process 0 :type :ok :f :write :value ["k2" "v46"]}
+ {:process 1 :type :fail :f :cas :value ["k3" "v45" "v48"] :error "precondition-failed"}
+ {:process 3 :type :invoke :f :cas :value ["k4" "v44" "v46"]}
+ {:process 4 :type :invoke :f :write :value ["k0" "v53"]}
+ {:process 1 :type :invoke :f :read :value ["k4" nil]}
+ {:process 4 :type :ok :f :write :value ["k0" "v53"]}
+ {:process 3 :type :fail :f :cas :value ["k4" "v44" "v46"] :error "precondition-failed"}
+ {:process 1 :type :ok :f :read :value ["k4" "v47"]}
+ {:process 4 :type :invoke :f :read :value ["k4" nil]}
+ {:process 2 :type :invoke :f :write :value ["k4" "v44"]}
+ {:process 1 :type :invoke :f :write :value ["k1" "v50"]}
+ {:process 0 :type :invoke :f :cas :value ["k3" "v28" "v47"]}
+ {:process 2 :type :ok :f :write :value ["k4" "v44"]}
+ {:process 0 :type :fail :f :cas :value ["k3" "v28" "v47"] :error "precondition-failed"}
+ {:process 4 :type :ok :f :read :value ["k4" "v44"]}
+ {:process 1 :type :ok :f :write :value ["k1" "v50"]}
+ {:process 3 :type :invoke :f :read :value ["k3" nil]}
+ {:process 0 :type :invoke :f :write :value ["k1" "v48"]}
+ {:process 3 :type :ok :f :read :value ["k3" "v43"]}
+ {:process 0 :type :ok :f :write :value ["k1" "v48"]}
+ {:process 3 :type :invoke :f :write :value ["k0" "v48"]}
+ {:process 1 :type :invoke :f :cas :value ["k4" "v47" "v51"]}
+ {:process 4 :type :invoke :f :write :value ["k4" "v55"]}
+ {:process 2 :type :invoke :f :read :value ["k4" nil]}
+ {:process 1 :type :fail :f :cas :value ["k4" "v47" "v51"] :error "precondition-failed"}
+ {:process 3 :type :ok :f :write :value ["k0" "v48"]}
+ {:process 2 :type :ok :f :read :value ["k4" "v44"]}
+ {:process 4 :type :ok :f :write :value ["k4" "v55"]}
+ {:process 0 :type :invoke :f :write :value ["k2" "v49"]}
+ {:process 0 :type :ok :f :write :value ["k2" "v49"]}
+ {:process 2 :type :invoke :f :read :value ["k3" nil]}
+ {:process 3 :type :invoke :f :write :value ["k4" "v49"]}
+ {:process 3 :type :ok :f :write :value ["k4" "v49"]}
+ {:process 2 :type :ok :f :read :value ["k3" "v43"]}
+ {:process 1 :type :invoke :f :read :value ["k1" nil]}
+ {:process 0 :type :invoke :f :write :value ["k3" "v50"]}
+ {:process 4 :type :invoke :f :read :value ["k3" nil]}
+ {:process 4 :type :ok :f :read :value ["k3" "v50"]}
+ {:process 1 :type :ok :f :read :value ["k1" "v48"]}
+ {:process 0 :type :ok :f :write :value ["k3" "v50"]}
+ {:process 3 :type :invoke :f :read :value ["k3" nil]}
+ {:process 3 :type :ok :f :read :value ["k3" "v50"]}
+ {:process 2 :type :invoke :f :write :value ["k1" "v47"]}
+ {:process 4 :type :invoke :f :write :value ["k1" "v57"]}
+ {:process 2 :type :ok :f :write :value ["k1" "v47"]}
+ {:process 4 :type :ok :f :write :value ["k1" "v57"]}
+ {:process 0 :type :invoke :f :write :value ["k3" "v51"]}
+ {:process 3 :type :invoke :f :write :value ["k4" "v51"]}
+ {:process 4 :type :invoke :f :read :value ["k4" nil]}
+ {:process 1 :type :invoke :f :read :value ["k1" nil]}
+ {:process 3 :type :ok :f :write :value ["k4" "v51"]}
+ {:process 0 :type :ok :f :write :value ["k3" "v51"]}
+ {:process 1 :type :ok :f :read :value ["k1" "v57"]}
+ {:process 4 :type :ok :f :read :value ["k4" "v49"]}
+ {:process 2 :type :invoke :f :read :value ["k3" nil]}
+ {:process 0 :type :invoke :f :cas :value ["k4" "v35" "v52"]}
+ {:process 2 :type :ok :f :read :value ["k3" "v51"]}
+ {:process 0 :type :fail :f :cas :value ["k4" "v35" "v52"] :error "precondition-failed"}
+ {:process 4 :type :invoke :f :write :value ["k4" "v59"]}
+ {:process 1 :type :invoke :f :read :value ["k4" nil]}
+ {:process 1 :type :ok :f :read :value ["k4" "v51"]}
+ {:process 4 :type :ok :f :write :value ["k4" "v59"]}
+ {:process 0 :type :invoke :f :write :value ["k1" "v53"]}
+ {:process 2 :type :invoke :f :write :value ["k2" "v49"]}
+ {:process 3 :type :invoke :f :read :value ["k0" nil]}
+ {:process 4 :type :invoke :f :write :value ["k3" "v60"]}
+ {:process 2 :type :ok :f :write :value ["k2" "v49"]}
+ {:process 0 :type :ok :f :write :value ["k1" "v53"]}
+ {:process 4 :type :ok :f :write :value ["k3" "v60"]}
+ {:process 3 :type :ok :f :read :value ["k0" "v48"]}
+ {:process 1 :type :invoke :f :write :value ["k0" "v55"]}
+ {:process 1 :type :ok :f :write :value ["k0" "v55"]}
+ {:process 3 :type :invoke :f :write :value ["k4" "v53"]}
+ {:process 3 :type :ok :f :write :value ["k4" "v53"]}
+ {:process 0 :type :invoke :f :write :value ["k1" "v54"]}
+ {:process 2 :type :invoke :f :write :value ["k1" "v50"]}
+ {:process 1 :type :invoke :f :read :value ["k4" nil]}
+ {:process 4 :type :invoke :f :cas :value ["k2" "v52" "v61"]}
+ {:process 2 :type :ok :f :write :value ["k1" "v50"]}
+ {:process 1 :type :ok :f :read :value ["k4" "v53"]}
+ {:process 0 :type :ok :f :write :value ["k1" "v54"]}
+ {:process 4 :type :fail :f :cas :value ["k2" "v52" "v61"] :error "precondition-failed"}
+ {:process 0 :type :invoke :f :cas :value ["k2" "v49" "v55"]}
+ {:process 3 :type :invoke :f :cas :value ["k2" "v40" "v54"]}
+ {:process 0 :type :ok :f :cas :value ["k2" "v49" "v55"]}
+ {:process 3 :type :fail :f :cas :value ["k2" "v40" "v54"] :error "precondition-failed"}
+ {:process 2 :type :invoke :f :write :value ["k3" "v51"]}
+ {:process 4 :type :invoke :f :read :value ["k4" nil]}
+ {:process 1 :type :invoke :f :read :value ["k3" nil]}
+ {:process 2 :type :ok :f :write :value ["k3" "v51"]}
+ {:process 4 :type :ok :f :read :value ["k4" "v53"]}
+ {:process 1 :type :ok :f :read :value ["k3" "v51"]}
+ {:process 3 :type :invoke :f :write :value ["k4" "v55"]}
+ {:process 3 :type :ok :f :write :value ["k4" "v55"]}
+ {:process 4 :type :invoke :f :cas :value ["k2" "v52" "v63"]}
+ {:process 2 :type :invoke :f :write :value ["k2" "v52"]}
+ {:process 2 :type :ok :f :write :value ["k2" "v52"]}
+ {:process 4 :type :ok :f :cas :value ["k2" "v52" "v63"]}
+ {:process 1 :type :invoke :f :cas :value ["k3" "v45" "v58"]}
+ {:process 2 :type :invoke :f :write :value ["k1" "v53"]}
+ {:process 0 :type :invoke :f :cas :value ["k4" "v35" "v56"]}
+ {:process 1 :type :info :f :cas :value ["k3" "v45" "v58"]}
+ {:process 0 :type :info :f :cas :value ["k4" "v35" "v56"]}
+ {:process 2 :type :info :f :write :value ["k1" "v53"]}
+ {:process 3 :type :invoke :f :write :value ["k0" "v56"]}
+ {:process 4 :type :invoke :f :write :value ["k1" "v64"]}
+ {:process 5 :type :invoke :f :read :value ["k0" nil]}
+ {:process 4 :type :info :f :write :value ["k1" "v64"]}
+ {:process 7 :type :invoke :f :cas :value ["k4" "v44" "v54"]}
+ {:process 5 :type :info :f :read :value ["k0" nil]}
+ {:process 3 :type :info :f :write :value ["k0" "v56"]}
+ {:process 7 :type :info :f :cas :value ["k4" "v44" "v54"]}
+ {:process 6 :type :invoke :f :read :value ["k4" nil]}
+ {:process 6 :type :info :f :read :value ["k4" nil]}
+ {:process 9 :type :invoke :f :cas :value ["k0" "v53" "v65"]}
+ {:process 12 :type :invoke :f :cas :value ["k1" "v50" "v55"]}
+ {:process 12 :type :info :f :cas :value ["k1" "v50" "v55"]}
+ {:process 9 :type :info :f :cas :value ["k0" "v53" "v65"]}
+ {:process 11 :type :invoke :f :read :value ["k1" nil]}
+ {:process 10 :type :invoke :f :write :value ["k1" "v58"]}
+ {:process 11 :type :info :f :read :value ["k1" nil]}
+ {:process 10 :type :info :f :write :value ["k1" "v58"]}
+ {:process 8 :type :invoke :f :read :value ["k3" nil]}
+ {:process 17 :type :invoke :f :write :value ["k3" "v56"]}
+ {:process 8 :type :info :f :read :value ["k3" nil]}
+ {:process 17 :type :info :f :write :value ["k3" "v56"]}
+ {:process 13 :type :invoke :f :read :value ["k3" nil]}
+ {:process 16 :type :invoke :f :read :value ["k0" nil]}
+ {:process 15 :type :invoke :f :write :value ["k1" "v59"]}
+ {:process 14 :type :invoke :f :read :value ["k4" nil]}
+ {:process 16 :type :info :f :read :value ["k0" nil]}
+ {:process 13 :type :info :f :read :value ["k3" nil]}
+ {:process 15 :type :info :f :write :value ["k1" "v59"]}
+ {:process 14 :type :info :f :read :value ["k4" nil]}
+ {:process 18 :type :invoke :f :cas :value ["k3" "v11" "v59"]}
+ {:process 22 :type :invoke :f :write :value ["k3" "v57"]}
+ {:process 22 :type :info :f :write :value ["k3" "v57"]}
+ {:process 18 :type :info :f :cas :value ["k3" "v11" "v59"]}
+ {:process 21 :type :invoke :f :read :value ["k0" nil]}
+ {:process 20 :type :invoke :f :read :value ["k4" nil]}
+ {:process 19 :type :invoke :f :write :value ["k0" "v67"]}
+ {:process 21 :type :info :f :read :value ["k0" nil]}
+ {:process 20 :type :info :f :read :value ["k4" nil]}
+ {:process 19 :type :info :f :write :value ["k0" "v67"]}
+ {:process 25 :type :invoke :f :read :value ["k4" nil]}
+ {:process 25 :type :info :f :read :value ["k4" nil]}
+ {:process 27 :type :invoke :f :read :value ["k4" nil]}
+ {:process 27 :type :info :f :read :value ["k4" nil]}
+ {:process 23 :type :invoke :f :read :value ["k2" nil]}
+ {:process 23 :type :info :f :read :value ["k2" nil]}
+ {:process 28 :type :invoke :f :read :value ["k1" nil]}
+ {:process 24 :type :invoke :f :write :value ["k3" "v68"]}
+ {:process 26 :type :invoke :f :write :value ["k2" "v63"]}
+ {:process 30 :type :invoke :f :read :value ["k0" nil]}
+ {:process 24 :type :info :f :write :value ["k3" "v68"]}
+ {:process 28 :type :info :f :read :value ["k1" nil]}
+ {:process 30 :type :info :f :read :value ["k0" nil]}
+ {:process 26 :type :info :f :write :value ["k2" "v63"]}
+ {:process 32 :type :invoke :f :cas :value ["k4" "v44" "v59"]}
+ {:process 31 :type :invoke :f :write :value ["k4" "v64"]}
+ {:process 31 :type :info :f :write :value ["k4" "v64"]}
+ {:process 32 :type :info :f :cas :value ["k4" "v44" "v59"]}
+ {:process 35 :type :invoke :f :write :value ["k1" "v63"]}
+ {:process 29 :type :invoke :f :cas :value ["k4" "v59" "v69"]}
+ {:process 29 :type :info :f :cas :value ["k4" "v59" "v69"]}
+ {:process 35 :type :info :f :write :value ["k1" "v63"]}
+ {:process 33 :type :invoke :f :read :value ["k2" nil]}
+ {:process 33 :type :info :f :read :value ["k2" nil]}
+ {:process 37 :type :invoke :f :cas :value ["k3" "v51" "v60"]}
+ {:process 36 :type :invoke :f :write :value ["k4" "v65"]}
+ {:process 36 :type :info :f :write :value ["k4" "v65"]}
+ {:process 37 :type :info :f :cas :value ["k3" "v51" "v60"]}
+ {:process 38 :type :invoke :f :cas :value ["k2" "v40" "v63"]}
+ {:process 34 :type :invoke :f :read :value ["k1" nil]}
+ {:process 40 :type :invoke :f :write :value ["k4" "v64"]}
+ {:process 40 :type :info :f :write :value ["k4" "v64"]}
+ {:process 38 :type :info :f :cas :value ["k2" "v40" "v63"]}
+ {:process 34 :type :info :f :read :value ["k1" nil]}
+ {:process 42 :type :invoke :f :read :value ["k3" nil]}
+ {:process 43 :type :invoke :f :write :value ["k1" "v64"]}
+ {:process 45 :type :invoke :f :write :value ["k4" "v65"]}
+ {:process 42 :type :info :f :read :value ["k3" nil]}
+ {:process 43 :type :info :f :write :value ["k1" "v64"]}
+ {:process 45 :type :info :f :write :value ["k4" "v65"]}
+ {:process 41 :type :invoke :f :write :value ["k4" "v66"]}
+ {:process 41 :type :info :f :write :value ["k4" "v66"]}
+ {:process 39 :type :invoke :f :write :value ["k4" "v71"]}
+ {:process 48 :type :invoke :f :write :value ["k4" "v65"]}
+ {:process 39 :type :info :f :write :value ["k4" "v71"]}
+ {:process 48 :type :info :f :write :value ["k4" "v65"]}
+ {:process 47 :type :invoke :f :write :value ["k4" "v62"]}
+ {:process 53 :type :invoke :f :read :value ["k2" nil]}
+ {:process 53 :type :info :f :read :value ["k2" nil]}
+ {:process 47 :type :info :f :write :value ["k4" "v62"]}
+ {:process 50 :type :invoke :f :cas :value ["k2" "v55" "v66"]}
+ {:process 46 :type :invoke :f :read :value ["k3" nil]}
+ {:process 52 :type :invoke :f :read :value ["k3" nil]}
+ {:process 44 :type :invoke :f :cas :value ["k4" "v59" "v72"]}
+ {:process 44 :type :info :f :cas :value ["k4" "v59" "v72"]}
+ {:process 52 :type :info :f :read :value ["k3" nil]}
+ {:process 46 :type :info :f :read :value ["k3" nil]}
+ {:process 50 :type :info :f :cas :value ["k2" "v55" "v66"]}
+ {:process 58 :type :invoke :f :cas :value ["k4" "v55" "v67"]}
+ {:process 51 :type :invoke :f :write :value ["k1" "v68"]}
+ {:process 51 :type :info :f :write :value ["k1" "v68"]}
+ {:process 58 :type :info :f :cas :value ["k4" "v55" "v67"]}
+ {:process 57 :type :invoke :f :cas :value ["k4" "v44" "v64"]}
+ {:process 57 :type :info :f :cas :value ["k4" "v44" "v64"]}
+ {:process 56 :type :invoke :f :cas :value ["k0" "v55" "v69"]}
+ {:process 49 :type :invoke :f :cas :value ["k2" "v63" "v73"]}
+ {:process 55 :type :invoke :f :write :value ["k4" "v67"]}
+ {:process 56 :type :info :f :cas :value ["k0" "v55" "v69"]}
+ {:process 55 :type :info :f :write :value ["k4" "v67"]}
+ {:process 49 :type :info :f :cas :value ["k2" "v63" "v73"]}
+ {:process 63 :type :invoke :f :write :value ["k3" "v68"]}
+ {:process 62 :type :invoke :f :write :value ["k4" "v65"]}
+ {:process 61 :type :invoke :f :write :value ["k0" "v70"]}
+ {:process 62 :type :info :f :write :value ["k4" "v65"]}
+ {:process 63 :type :info :f :write :value ["k3" "v68"]}
+ {:process 61 :type :info :f :write :value ["k0" "v70"]}
+ {:process 67 :type :invoke :f :read :value ["k0" nil]}
+ {:process 60 :type :invoke :f :read :value ["k1" nil]}
+ {:process 54 :type :invoke :f :read :value ["k2" nil]}
+ {:process 68 :type :invoke :f :write :value ["k0" "v69"]}
+ {:process 66 :type :invoke :f :read :value ["k4" nil]}
+ {:process 54 :type :info :f :read :value ["k2" nil]}
+ {:process 60 :type :info :f :read :value ["k1" nil]}
+ {:process 67 :type :info :f :read :value ["k0" nil]}
+ {:process 68 :type :info :f :write :value ["k0" "v69"]}
+ {:process 66 :type :info :f :read :value ["k4" nil]}
+ {:process 72 :type :invoke :f :read :value ["k2" nil]}
+ {:process 73 :type :invoke :f :cas :value ["k3" "v11" "v70"]}
+ {:process 71 :type :invoke :f :write :value ["k3" "v72"]}
+ {:process 71 :type :info :f :write :value ["k3" "v72"]}
+ {:process 72 :type :info :f :read :value ["k2" nil]}
+ {:process 73 :type :info :f :cas :value ["k3" "v11" "v70"]}
+ {:process 59 :type :invoke :f :write :value ["k3" "v75"]}
+ {:process 65 :type :invoke :f :write :value ["k0" "v69"]}
+ {:process 76 :type :invoke :f :read :value ["k2" nil]}
+ {:process 65 :type :info :f :write :value ["k0" "v69"]}
+ {:process 59 :type :info :f :write :value ["k3" "v75"]}
+ {:process 76 :type :info :f :read :value ["k2" nil]}
+ {:process 64 :type :invoke :f :write :value ["k2" "v76"]}
+ {:process 81 :type :invoke :f :cas :value ["k0" "v55" "v74"]}
+ {:process 64 :type :info :f :write :value ["k2" "v76"]}
+ {:process 78 :type :invoke :f :read :value ["k2" nil]}
+ {:process 81 :type :info :f :cas :value ["k0" "v55" "v74"]}
+ {:process 78 :type :info :f :read :value ["k2" nil]}
+ {:process 77 :type :invoke :f :read :value ["k4" nil]}
+ {:process 69 :type :invoke :f :cas :value ["k3" "v60" "v77"]}
+ {:process 69 :type :info :f :cas :value ["k3" "v60" "v77"]}
+ {:process 77 :type :info :f :read :value ["k4" nil]}
+ {:process 70 :type :invoke :f :read :value ["k4" nil]}
+ {:process 70 :type :info :f :read :value ["k4" nil]}
+ {:process 82 :type :invoke :f :read :value ["k2" nil]}
+ {:process 83 :type :invoke :f :write :value ["k1" "v72"]}
+ {:process 86 :type :invoke :f :cas :value ["k4" "v47" "v75"]}
+ {:process 75 :type :invoke :f :write :value ["k3" "v71"]}
+ {:process 83 :type :info :f :write :value ["k1" "v72"]}
+ {:process 86 :type :info :f :cas :value ["k4" "v47" "v75"]}
+ {:process 82 :type :info :f :read :value ["k2" nil]}
+ {:process 74 :type :invoke :f :cas :value ["k2" "v63" "v78"]}
+ {:process 75 :type :info :f :write :value ["k3" "v71"]}
+ {:process 74 :type :info :f :cas :value ["k2" "v63" "v78"]}
+ {:process 80 :type :invoke :f :write :value ["k0" "v72"]}
+ {:process 79 :type :invoke :f :read :value ["k3" nil]}
+ {:process 79 :type :info :f :read :value ["k3" nil]}
+ {:process 80 :type :info :f :write :value ["k0" "v72"]}
+ {:process 88 :type :invoke :f :write :value ["k1" "v73"]}
+ {:process 91 :type :invoke :f :read :value ["k2" nil]}
+ {:process 91 :type :info :f :read :value ["k2" nil]}
+ {:process 88 :type :info :f :write :value ["k1" "v73"]}
+ {:process 93 :type :invoke :f :write :value ["k1" "v74"]}
+ {:process 85 :type :invoke :f :cas :value ["k4" "v35" "v73"]}
+ {:process 87 :type :invoke :f :write :value ["k0" "v70"]}
+ {:process 93 :type :info :f :write :value ["k1" "v74"]}
+ {:process 87 :type :info :f :write :value ["k0" "v70"]}
+ {:process 85 :type :info :f :cas :value ["k4" "v35" "v73"]}
+ {:process 90 :type :invoke :f :write :value ["k4" "v74"]}
+ {:process 96 :type :invoke :f :read :value ["k3" nil]}
+ {:process 92 :type :invoke :f :cas :value ["k2" "v52" "v71"]}
+ {:process 84 :type :invoke :f :write :value ["k0" "v80"]}
+ {:process 96 :type :info :f :read :value ["k3" nil]}
+ {:process 84 :type :info :f :write :value ["k0" "v80"]}
+ {:process 90 :type :info :f :write :value ["k4" "v74"]}
+ {:process 92 :type :info :f :cas :value ["k2" "v52" "v71"]}
+ {:process 89 :type :invoke :f :write :value ["k2" "v81"]}
+ {:process 101 :type :invoke :f :cas :value ["k1" "v50" "v78"]}
+ {:process 97 :type :invoke :f :read :value ["k0" nil]}
+ {:process 98 :type :invoke :f :read :value ["k0" nil]}
+ {:process 89 :type :info :f :write :value ["k2" "v81"]}
+ {:process 101 :type :info :f :cas :value ["k1" "v50" "v78"]}
+ {:process 98 :type :info :f :read :value ["k0" nil]}
+ {:process 97 :type :info :f :read :value ["k0" nil]}
+ {:process 95 :type :invoke :f :read :value ["k3" nil]}
+ {:process 95 :type :info :f :read :value ["k3" nil]}
+ {:process 103 :type :invoke :f :read :value ["k0" nil]}
+ {:process 94 :type :invoke :f :read :value ["k4" nil]}
+ {:process 103 :type :info :f :read :value ["k0" nil]}
+ {:process 94 :type :info :f :read :value ["k4" nil]}
+ {:process 106 :type :invoke :f :write :value ["k1" "v79"]}
+ {:process 108 :type :invoke :f :write :value ["k2" "v77"]}
+ {:process 100 :type :invoke :f :read :value ["k1" nil]}
+ {:process 102 :type :invoke :f :read :value ["k1" nil]}
+ {:process 108 :type :info :f :write :value ["k2" "v77"]}
+ {:process 102 :type :info :f :read :value ["k1" nil]}
+ {:process 100 :type :info :f :read :value ["k1" nil]}
+ {:process 106 :type :info :f :write :value ["k1" "v79"]}
+ {:process 111 :type :invoke :f :read :value ["k1" nil]}
+ {:process 99 :type :invoke :f :read :value ["k1" nil]}
+ {:process 111 :type :info :f :read :value ["k1" nil]}
+ {:process 99 :type :info :f :read :value ["k1" nil]}
+ {:process 105 :type :invoke :f :cas :value ["k2" "v55" "v77"]}
+ {:process 107 :type :invoke :f :read :value ["k3" nil]}
+ {:process 113 :type :invoke :f :read :value ["k4" nil]}
+ {:process 107 :type :info :f :read :value ["k3" nil]}
+ {:process 105 :type :info :f :cas :value ["k2" "v55" "v77"]}
+ {:process 113 :type :info :f :read :value ["k4" nil]}
+ {:process 104 :type :invoke :f :read :value ["k3" nil]}
+ {:process 104 :type :info :f :read :value ["k3" nil]}
+ {:process 110 :type :invoke :f :read :value ["k3" nil]}
+ {:process 116 :type :invoke :f :read :value ["k0" nil]}
+ {:process 116 :type :info :f :read :value ["k0" nil]}
+ {:process 110 :type :info :f :read :value ["k3" nil]}
+ {:process 112 :type :invoke :f :read :value ["k4" nil]}
+ {:process 118 :type :invoke :f :write :value ["k2" "v79"]}
+ {:process 121 :type :invoke :f :read :value ["k4" nil]}
+ {:process 112 :type :info :f :read :value ["k4" nil]}
+ {:process 118 :type :info :f :write :value ["k2" "v79"]}
+ {:process 121 :type :info :f :read :value ["k4" nil]}
+ {:process 109 :type :invoke :f :read :value ["k1" nil]}
+ {:process 109 :type :info :f :read :value ["k1" nil]}
+ {:process 126 :type :invoke :f :write :value ["k3" "v83"]}
+ {:process 117 :type :invoke :f :cas :value ["k4" "v44" "v76"]}
+ {:process 115 :type :invoke :f :read :value ["k0" nil]}
+ {:process 126 :type :info :f :write :value ["k3" "v83"]}
+ {:process 115 :type :info :f :read :value ["k0" nil]}
+ {:process 117 :type :info :f :cas :value ["k4" "v44" "v76"]}
+ {:process 123 :type :invoke :f :read :value ["k0" nil]}
+ {:process 123 :type :info :f :read :value ["k0" nil]}
+ {:process 114 :type :invoke :f :write :value ["k3" "v86"]}
+ {:process 120 :type :invoke :f :cas :value ["k0" "v44" "v80"]}
+ {:process 114 :type :info :f :write :value ["k3" "v86"]}
+ {:process 120 :type :info :f :cas :value ["k0" "v44" "v80"]}
+ {:process 122 :type :invoke :f :read :value ["k2" nil]}
+ {:process 131 :type :invoke :f :cas :value ["k1" "v50" "v84"]}
+ {:process 122 :type :info :f :read :value ["k2" nil]}
+ {:process 119 :type :invoke :f :write :value ["k0" "v87"]}
+ {:process 131 :type :info :f :cas :value ["k1" "v50" "v84"]}
+ {:process 119 :type :info :f :write :value ["k0" "v87"]}
+ {:process 128 :type :invoke :f :read :value ["k0" nil]}
+ {:process 128 :type :info :f :read :value ["k0" nil]}
+ {:process 127 :type :invoke :f :write :value ["k1" "v78"]}
+ {:process 125 :type :invoke :f :cas :value ["k0" "v44" "v81"]}
+ {:process 125 :type :info :f :cas :value ["k0" "v44" "v81"]}
+ {:process 127 :type :info :f :write :value ["k1" "v78"]}
+ {:process 133 :type :invoke :f :write :value ["k2" "v82"]}
+ {:process 124 :type :invoke :f :write :value ["k0" "v88"]}
+ {:process 136 :type :invoke :f :write :value ["k3" "v85"]}
+ {:process 133 :type :info :f :write :value ["k2" "v82"]}
+ {:process 124 :type :info :f :write :value ["k0" "v88"]}
+ {:process 136 :type :info :f :write :value ["k3" "v85"]}
+ {:process 130 :type :invoke :f :cas :value ["k3" "v51" "v82"]}
+ {:process 129 :type :invoke :f :cas :value ["k2" "v63" "v89"]}
+ {:process 130 :type :info :f :cas :value ["k3" "v51" "v82"]}
+ {:process 129 :type :info :f :cas :value ["k2" "v63" "v89"]}
+ {:process 141 :type :invoke :f :cas :value ["k0" "v55" "v86"]}
+ {:process 138 :type :invoke :f :read :value ["k0" nil]}
+ {:process 141 :type :info :f :cas :value ["k0" "v55" "v86"]}
+ {:process 138 :type :info :f :read :value ["k0" nil]}
+ {:process 132 :type :invoke :f :write :value ["k4" "v79"]}
+ {:process 134 :type :invoke :f :write :value ["k3" "v90"]}
+ {:process 132 :type :info :f :write :value ["k4" "v79"]}
+ {:process 134 :type :info :f :write :value ["k3" "v90"]}
+ {:process 135 :type :invoke :f :write :value ["k1" "v83"]}
+ {:process 135 :type :info :f :write :value ["k1" "v83"]}
+ {:process 146 :type :invoke :f :read :value ["k4" nil]}
+ {:process 143 :type :invoke :f :write :value ["k2" "v84"]}
+ {:process 137 :type :invoke :f :read :value ["k2" nil]}
+ {:process 146 :type :info :f :read :value ["k4" nil]}
+ {:process 143 :type :info :f :write :value ["k2" "v84"]}
+ {:process 137 :type :info :f :read :value ["k2" nil]}
+ {:process 139 :type :invoke :f :read :value ["k3" nil]}
+ {:process 151 :type :invoke :f :cas :value ["k0" "v55" "v88"]}
+ {:process 151 :type :info :f :cas :value ["k0" "v55" "v88"]}
+ {:process 139 :type :info :f :read :value ["k3" nil]}
+ {:process 140 :type :invoke :f :write :value ["k2" "v84"]}
+ {:process 144 :type :invoke :f :write :value ["k1" "v92"]}
+ {:process 140 :type :info :f :write :value ["k2" "v84"]}
+ {:process 144 :type :info :f :write :value ["k1" "v92"]}
+ {:process 142 :type :invoke :f :cas :value ["k2" "v52" "v81"]}
+ {:process 156 :type :invoke :f :read :value ["k1" nil]}
+ {:process 148 :type :invoke :f :cas :value ["k3" "v11" "v85"]}
+ {:process 148 :type :info :f :cas :value ["k3" "v11" "v85"]}
+ {:process 156 :type :info :f :read :value ["k1" nil]}
+ {:process 142 :type :info :f :cas :value ["k2" "v52" "v81"]}
+ {:process 149 :type :invoke :f :read :value ["k2" nil]}
+ {:process 149 :type :info :f :read :value ["k2" nil]}
+ {:process 153 :type :invoke :f :cas :value ["k1" "v29" "v86"]}
+ {:process 161 :type :invoke :f :write :value ["k2" "v90"]}
+ {:process 145 :type :invoke :f :write :value ["k4" "v85"]}
+ {:process 153 :type :info :f :cas :value ["k1" "v29" "v86"]}
+ {:process 161 :type :info :f :write :value ["k2" "v90"]}
+ {:process 145 :type :info :f :write :value ["k4" "v85"]}
+ {:process 154 :type :invoke :f :read :value ["k0" nil]}
+ {:process 147 :type :invoke :f :read :value ["k2" nil]}
+ {:process 166 :type :invoke :f :read :value ["k2" nil]}
+ {:process 147 :type :info :f :read :value ["k2" nil]}
+ {:process 154 :type :info :f :read :value ["k0" nil]}
+ {:process 166 :type :info :f :read :value ["k2" nil]}
+ {:process 150 :type :invoke :f :cas :value ["k3" "v51" "v86"]}
+ {:process 158 :type :invoke :f :read :value ["k0" nil]}
+ {:process 150 :type :info :f :cas :value ["k3" "v51" "v86"]}
+ {:process 158 :type :info :f :read :value ["k0" nil]}
+ {:process 163 :type :invoke :f :cas :value ["k0" "v48" "v88"]}
+ {:process 152 :type :invoke :f :write :value ["k4" "v83"]}
+ {:process 159 :type :invoke :f :cas :value ["k1" "v57" "v95"]}
+ {:process 159 :type :info :f :cas :value ["k1" "v57" "v95"]}
+ {:process 163 :type :info :f :cas :value ["k0" "v48" "v88"]}
+ {:process 152 :type :info :f :write :value ["k4" "v83"]}
+ {:process 171 :type :invoke :f :read :value ["k1" nil]}
+ {:process 164 :type :invoke :f :read :value ["k1" nil]}
+ {:process 171 :type :info :f :read :value ["k1" nil]}
+ {:process 157 :type :invoke :f :read :value ["k0" nil]}
+ {:process 164 :type :info :f :read :value ["k1" nil]}
+ {:process 157 :type :info :f :read :value ["k0" nil]}
+ {:process 155 :type :invoke :f :read :value ["k0" nil]}
+ {:process 155 :type :info :f :read :value ["k0" nil]}
+ {:process 176 :type :invoke :f :cas :value ["k1" "v50" "v93"]}
+ {:process 176 :type :info :f :cas :value ["k1" "v50" "v93"]}
+ {:process 160 :type :invoke :f :write :value ["k0" "v88"]}
+ {:process 168 :type :invoke :f :read :value ["k4" nil]}
+ {:process 168 :type :info :f :read :value ["k4" nil]}
+ {:process 160 :type :info :f :write :value ["k0" "v88"]}
+ {:process 162 :type :invoke :f :read :value ["k2" nil]}
+ {:process 169 :type :invoke :f :cas :value ["k2" "v63" "v97"]}
+ {:process 162 :type :info :f :read :value ["k2" nil]}
+ {:process 169 :type :info :f :cas :value ["k2" "v63" "v97"]}
+ {:process 181 :type :invoke :f :read :value ["k3" nil]}
+ {:process 181 :type :info :f :read :value ["k3" nil]}
+ {:process 165 :type :invoke :f :write :value ["k1" "v89"]}
+ {:process 167 :type :invoke :f :cas :value ["k0" "v33" "v86"]}
+ {:process 173 :type :invoke :f :cas :value ["k4" "v55" "v90"]}
+ {:process 174 :type :invoke :f :read :value ["k2" nil]}
+ {:process 174 :type :info :f :read :value ["k2" nil]}
+ {:process 186 :type :invoke :f :read :value ["k4" nil]}
+ {:process 173 :type :info :f :cas :value ["k4" "v55" "v90"]}
+ {:process 165 :type :info :f :write :value ["k1" "v89"]}
+ {:process 167 :type :info :f :cas :value ["k0" "v33" "v86"]}
+ {:process 186 :type :info :f :read :value ["k4" nil]}
+ {:process 191 :type :invoke :f :write :value ["k0" "v96"]}
+ {:process 170 :type :invoke :f :read :value ["k2" nil]}
+ {:process 191 :type :info :f :write :value ["k0" "v96"]}
+ {:process 178 :type :invoke :f :read :value ["k4" nil]}
+ {:process 170 :type :info :f :read :value ["k2" nil]}
+ {:process 178 :type :info :f :read :value ["k4" nil]}
+ {:process 179 :type :invoke :f :cas :value ["k2" "v63" "v99"]}
+ {:process 172 :type :invoke :f :read :value ["k4" nil]}
+ {:process 175 :type :invoke :f :cas :value ["k1" "v54" "v91"]}
+ {:process 179 :type :info :f :cas :value ["k2" "v63" "v99"]}
+ {:process 172 :type :info :f :read :value ["k4" nil]}
+ {:process 175 :type :info :f :cas :value ["k1" "v54" "v91"]}
+ {:process 196 :type :invoke :f :read :value ["k4" nil]}
+ {:process 183 :type :invoke :f :write :value ["k2" "v92"]}
+ {:process 196 :type :info :f :read :value ["k4" nil]}
+ {:process 183 :type :info :f :write :value ["k2" "v92"]}
+ {:process 180 :type :invoke :f :read :value ["k4" nil]}
+ {:process 177 :type :invoke :f :read :value ["k3" nil]}
+ {:process 180 :type :info :f :read :value ["k4" nil]}
+ {:process 177 :type :info :f :read :value ["k3" nil]}
+ {:process 185 :type :invoke :f :read :value ["k3" nil]}
+ {:process 185 :type :info :f :read :value ["k3" nil]}
+ {:process 201 :type :invoke :f :write :value ["k3" "v98"]}
+ {:process 184 :type :invoke :f :read :value ["k4" nil]}
+ {:process 188 :type :invoke :f :write :value ["k3" "v93"]}
+ {:process 201 :type :info :f :write :value ["k3" "v98"]}
+ {:process 184 :type :info :f :read :value ["k4" nil]}
+ {:process 188 :type :info :f :write :value ["k3" "v93"]}
+ {:process 182 :type :invoke :f :write :value ["k2" "v89"]}
+ {:process 206 :type :invoke :f :read :value ["k2" nil]}
+ {:process 182 :type :info :f :write :value ["k2" "v89"]}
+ {:process 206 :type :info :f :read :value ["k2" nil]}
+ {:process 189 :type :invoke :f :write :value ["k0" "v101"]}
+ {:process 190 :type :invoke :f :read :value ["k1" nil]}
+ {:process 193 :type :invoke :f :read :value ["k1" nil]}
+ {:process 189 :type :info :f :write :value ["k0" "v101"]}
+ {:process 193 :type :info :f :read :value ["k1" nil]}
+ {:process 190 :type :info :f :read :value ["k1" nil]}
+ {:process 211 :type :invoke :f :write :value ["k2" "v100"]}
+ {:process 195 :type :invoke :f :write :value ["k1" "v95"]}
+ {:process 195 :type :info :f :write :value ["k1" "v95"]}
+ {:process 211 :type :info :f :write :value ["k2" "v100"]}
+ {:process 187 :type :invoke :f :read :value ["k3" nil]}
+ {:process 198 :type :invoke :f :cas :value ["k4" "v55" "v95"]}
+ {:process 198 :type :info :f :cas :value ["k4" "v55" "v95"]}
+ {:process 187 :type :info :f :read :value ["k3" nil]}
+ {:process 200 :type :invoke :f :read :value ["k4" nil]}
+ {:process 194 :type :invoke :f :read :value ["k3" nil]}
+ {:process 203 :type :invoke :f :cas :value ["k0" "v48" "v96"]}
+ {:process 200 :type :info :f :read :value ["k4" nil]}
+ {:process 194 :type :info :f :read :value ["k3" nil]}
+ {:process 203 :type :info :f :cas :value ["k0" "v48" "v96"]}
+ {:process 192 :type :invoke :f :read :value ["k4" nil]}
+ {:process 199 :type :invoke :f :write :value ["k0" "v103"]}
+ {:process 192 :type :info :f :read :value ["k4" nil]}
+ {:process 199 :type :info :f :write :value ["k0" "v103"]}
+ {:process 216 :type :invoke :f :cas :value ["k3" "v45" "v101"]}
+ {:process 216 :type :info :f :cas :value ["k3" "v45" "v101"]}
+ {:process 204 :type :invoke :f :read :value ["k1" nil]}
+ {:process 208 :type :invoke :f :write :value ["k0" "v97"]}
+ {:process 208 :type :info :f :write :value ["k0" "v97"]}
+ {:process 204 :type :info :f :read :value ["k1" nil]}
+ {:process 205 :type :invoke :f :write :value ["k0" "v97"]}
+ {:process 197 :type :invoke :f :write :value ["k2" "v92"]}
+ {:process 205 :type :info :f :write :value ["k0" "v97"]}
+ {:process 197 :type :info :f :write :value ["k2" "v92"]}
+ {:process 221 :type :invoke :f :write :value ["k0" "v102"]}
+ {:process 213 :type :invoke :f :write :value ["k0" "v98"]}
+ {:process 221 :type :info :f :write :value ["k0" "v102"]}
+ {:process 213 :type :info :f :write :value ["k0" "v98"]}
+ {:process 210 :type :invoke :f :cas :value ["k3" "v51" "v98"]}
+ {:process 202 :type :invoke :f :write :value ["k4" "v93"]}
+ {:process 226 :type :invoke :f :write :value ["k3" "v103"]}
+ {:process 209 :type :invoke :f :write :value ["k1" "v105"]}
+ {:process 210 :type :info :f :cas :value ["k3" "v51" "v98"]}
+ {:process 202 :type :info :f :write :value ["k4" "v93"]}
+ {:process 209 :type :info :f :write :value ["k1" "v105"]}
+ {:process 226 :type :info :f :write :value ["k3" "v103"]}
+ {:process 207 :type :invoke :f :read :value ["k1" nil]}
+ {:process 218 :type :invoke :f :cas :value ["k0" "v48" "v99"]}
+ {:process 215 :type :invoke :f :write :value ["k1" "v99"]}
+ {:process 214 :type :invoke :f :write :value ["k4" "v106"]}
+ {:process 207 :type :info :f :read :value ["k1" nil]}
+ {:process 215 :type :info :f :write :value ["k1" "v99"]}
+ {:process 214 :type :info :f :write :value ["k4" "v106"]}
+ {:process 218 :type :info :f :cas :value ["k0" "v48" "v99"]}
+ {:process 231 :type :invoke :f :read :value ["k0" nil]}
+ {:process 219 :type :invoke :f :read :value ["k2" nil]}
+ {:process 219 :type :info :f :read :value ["k2" nil]}
+ {:process 231 :type :info :f :read :value ["k0" nil]}
+ {:process 212 :type :invoke :f :cas :value ["k2" "v52" "v95"]}
+ {:process 212 :type :info :f :cas :value ["k2" "v52" "v95"]}
+ {:process 223 :type :invoke :f :cas :value ["k2" "v40" "v100"]}
+ {:process 220 :type :invoke :f :cas :value ["k3" "v51" "v100"]}
+ {:process 223 :type :info :f :cas :value ["k2" "v40" "v100"]}
+ {:process 220 :type :info :f :cas :value ["k3" "v51" "v100"]}
+ {:process 217 :type :invoke :f :read :value ["k0" nil]}
+ {:process 236 :type :invoke :f :read :value ["k4" nil]}
+ {:process 224 :type :invoke :f :write :value ["k0" "v108"]}
+ {:process 217 :type :info :f :read :value ["k0" nil]}
+ {:process 236 :type :info :f :read :value ["k4" nil]}
+ {:process 224 :type :info :f :write :value ["k0" "v108"]}
+ {:process 229 :type :invoke :f :write :value ["k2" "v109"]}
+ {:process 225 :type :invoke :f :write :value ["k1" "v101"]}
+ {:process 241 :type :invoke :f :read :value ["k4" nil]}
+ {:process 222 :type :invoke :f :write :value ["k4" "v97"]}
+ {:process 225 :type :info :f :write :value ["k1" "v101"]}
+ {:process 222 :type :info :f :write :value ["k4" "v97"]}
+ {:process 229 :type :info :f :write :value ["k2" "v109"]}
+ {:process 241 :type :info :f :read :value ["k4" nil]}
+ {:process 228 :type :invoke :f :read :value ["k0" nil]}
+ {:process 228 :type :info :f :read :value ["k0" nil]}
+ {:process 227 :type :invoke :f :cas :value ["k0" "v33" "v98"]}
+ {:process 230 :type :invoke :f :read :value ["k0" nil]}
+ {:process 227 :type :info :f :cas :value ["k0" "v33" "v98"]}
+ {:process 230 :type :info :f :read :value ["k0" nil]}
+ {:process 246 :type :invoke :f :write :value ["k4" "v107"]}
+ {:process 233 :type :invoke :f :write :value ["k1" "v102"]}
+ {:process 234 :type :invoke :f :read :value ["k4" nil]}
+ {:process 232 :type :invoke :f :write :value ["k3" "v99"]}
+ {:process 232 :type :info :f :write :value ["k3" "v99"]}
+ {:process 233 :type :info :f :write :value ["k1" "v102"]}
+ {:process 235 :type :invoke :f :cas :value ["k0" "v44" "v103"]}
+ {:process 238 :type :invoke :f :cas :value ["k3" "v11" "v103"]}
+ {:process 237 :type :invoke :f :write :value ["k0" "v100"]}
+ {:process 237 :type :info :f :write :value ["k0" "v100"]}
+ {:process 242 :type :invoke :f :write :value ["k3" "v101"]}
+ {:process 246 :type :info :f :write :value ["k4" "v107"]}
+ {:process 234 :type :info :f :read :value ["k4" nil]}
+ {:process 251 :type :invoke :f :cas :value ["k3" "v45" "v108"]}
+ {:process 235 :type :info :f :cas :value ["k0" "v44" "v103"]}
+ {:process 251 :type :info :f :cas :value ["k3" "v45" "v108"]}
+ {:process 239 :type :invoke :f :read :value ["k4" nil]}
+ {:process 238 :type :info :f :cas :value ["k3" "v11" "v103"]}
+ {:process 239 :type :info :f :read :value ["k4" nil]}
+ {:process 240 :type :invoke :f :read :value ["k0" nil]}
+ {:process 256 :type :invoke :f :write :value ["k1" "v109"]}
+ {:process 243 :type :invoke :f :read :value ["k1" nil]}
+ {:process 256 :type :info :f :write :value ["k1" "v109"]}
+ {:process 243 :type :info :f :read :value ["k1" nil]}
+ {:process 240 :type :info :f :read :value ["k0" nil]}
+ {:process 248 :type :invoke :f :cas :value ["k0" "v48" "v105"]}
+ {:process 244 :type :invoke :f :read :value ["k2" nil]}
+ {:process 242 :type :info :f :write :value ["k3" "v101"]}
+ {:process 248 :type :info :f :cas :value ["k0" "v48" "v105"]}
+ {:process 244 :type :info :f :read :value ["k2" nil]}
+ {:process 261 :type :invoke :f :cas :value ["k3" "v45" "v110"]}
+ {:process 249 :type :invoke :f :read :value ["k2" nil]}
+ {:process 245 :type :invoke :f :read :value ["k1" nil]}
+ {:process 245 :type :info :f :read :value ["k1" nil]}
+ {:process 247 :type :invoke :f :read :value ["k4" nil]}
+ {:process 247 :type :info :f :read :value ["k4" nil]}
+ {:process 252 :type :invoke :f :write :value ["k1" "v103"]}
+ {:process 253 :type :invoke :f :write :value ["k4" "v106"]}
+ {:process 252 :type :info :f :write :value ["k1" "v103"]}
+ {:process 250 :type :invoke :f :write :value ["k0" "v106"]}
+ {:process 257 :type :invoke :f :read :value ["k4" nil]}
+ {:process 261 :type :info :f :cas :value ["k3" "v45" "v110"]}
+ {:process 249 :type :info :f :read :value ["k2" nil]}
+ {:process 254 :type :invoke :f :cas :value ["k0" "v53" "v114"]}
+ {:process 266 :type :invoke :f :read :value ["k2" nil]}
+ {:process 254 :type :info :f :cas :value ["k0" "v53" "v114"]}
+ {:process 266 :type :info :f :read :value ["k2" nil]}
+ {:process 271 :type :invoke :f :write :value ["k3" "v112"]}
+ {:process 253 :type :info :f :write :value ["k4" "v106"]}
+ {:process 271 :type :info :f :write :value ["k3" "v112"]}
+ {:process 259 :type :invoke :f :write :value ["k4" "v115"]}
+ {:process 250 :type :info :f :write :value ["k0" "v106"]}
+ {:process 258 :type :invoke :f :write :value ["k0" "v107"]}
+ {:process 259 :type :info :f :write :value ["k4" "v115"]}
+ {:process 258 :type :info :f :write :value ["k0" "v107"]}
+ {:process 276 :type :invoke :f :write :value ["k2" "v113"]}
+ {:process 255 :type :invoke :f :write :value ["k2" "v107"]}
+ {:process 255 :type :info :f :write :value ["k2" "v107"]}
+ {:process 264 :type :invoke :f :write :value ["k3" "v116"]}
+ {:process 257 :type :info :f :read :value ["k4" nil]}
+ {:process 262 :type :invoke :f :write :value ["k2" "v105"]}
+ {:process 263 :type :invoke :f :write :value ["k0" "v108"]}
+ {:process 260 :type :invoke :f :read :value ["k2" nil]}
+ {:process 262 :type :info :f :write :value ["k2" "v105"]}
+ {:process 263 :type :info :f :write :value ["k0" "v108"]}
+ {:process 260 :type :info :f :read :value ["k2" nil]}
+ {:process 267 :type :invoke :f :read :value ["k2" nil]}
+ {:process 267 :type :info :f :read :value ["k2" nil]}
+ {:process 268 :type :invoke :f :write :value ["k3" "v109"]}
+ {:process 265 :type :invoke :f :write :value ["k1" "v109"]}
+ {:process 272 :type :invoke :f :read :value ["k2" nil]}
+ {:process 276 :type :info :f :write :value ["k2" "v113"]}
+ {:process 281 :type :invoke :f :cas :value ["k0" "v55" "v114"]}
+ {:process 264 :type :info :f :write :value ["k3" "v116"]}
+ {:process 281 :type :info :f :cas :value ["k0" "v55" "v114"]}
+ {:process 286 :type :invoke :f :cas :value ["k1" "v50" "v115"]}
+ {:process 286 :type :info :f :cas :value ["k1" "v50" "v115"]}
+ {:process 269 :type :invoke :f :cas :value ["k4" "v59" "v117"]}
+ {:process 265 :type :info :f :write :value ["k1" "v109"]}
+ {:process 268 :type :info :f :write :value ["k3" "v109"]}
+ {:process 269 :type :info :f :cas :value ["k4" "v59" "v117"]}
+ {:process 272 :type :info :f :read :value ["k2" nil]}
+ {:process 291 :type :invoke :f :write :value ["k2" "v116"]}
+ {:process 270 :type :invoke :f :read :value ["k2" nil]}
+ {:process 270 :type :info :f :read :value ["k2" nil]}
+ {:process 273 :type :invoke :f :write :value ["k3" "v110"]}
+ {:process 274 :type :invoke :f :write :value ["k4" "v118"]}
+ {:process 273 :type :info :f :write :value ["k3" "v110"]}
+ {:process 274 :type :info :f :write :value ["k4" "v118"]}
+ {:process 277 :type :invoke :f :write :value ["k2" "v108"]}
+ {:process 279 :type :invoke :f :write :value ["k3" "v119"]}
+ {:process 277 :type :info :f :write :value ["k2" "v108"]}
+ {:process 275 :type :invoke :f :cas :value ["k3" "v51" "v111"]}
+ {:process 282 :type :invoke :f :cas :value ["k3" "v51" "v109"]}
+ {:process 275 :type :info :f :cas :value ["k3" "v51" "v111"]}
+ {:process 282 :type :info :f :cas :value ["k3" "v51" "v109"]}
+ {:process 287 :type :invoke :f :write :value ["k3" "v110"]}
+ {:process 278 :type :invoke :f :write :value ["k4" "v111"]}
+ {:process 278 :type :info :f :write :value ["k4" "v111"]}
+ {:process 280 :type :invoke :f :read :value ["k4" nil]}
+ {:process 283 :type :invoke :f :read :value ["k3" nil]}
+ {:process 291 :type :info :f :write :value ["k2" "v116"]}
+ {:process 279 :type :info :f :write :value ["k3" "v119"]}
+ {:process 296 :type :invoke :f :write :value ["k0" "v117"]}
+ {:process 284 :type :invoke :f :read :value ["k1" nil]}
+ {:process 280 :type :info :f :read :value ["k4" nil]}
+ {:process 283 :type :info :f :read :value ["k3" nil]}
+ {:process 287 :type :info :f :write :value ["k3" "v110"]}
+ {:process 288 :type :invoke :f :write :value ["k2" "v113"]}
+ {:process 292 :type :invoke :f :write :value ["k0" "v111"]}
+ {:process 288 :type :info :f :write :value ["k2" "v113"]}
+ {:process 292 :type :info :f :write :value ["k0" "v111"]}
+ {:process 285 :type :invoke :f :write :value ["k3" "v113"]}
+ {:process 285 :type :info :f :write :value ["k3" "v113"]}
+ {:process 290 :type :invoke :f :write :value ["k0" "v114"]}
+ {:process 290 :type :info :f :write :value ["k0" "v114"]}
+ {:process 293 :type :invoke :f :read :value ["k4" nil]}
+ {:process 297 :type :invoke :f :write :value ["k4" "v112"]}
+ {:process 295 :type :invoke :f :write :value ["k3" "v115"]}
+ {:process 297 :type :info :f :write :value ["k4" "v112"]}
+ {:process 293 :type :info :f :read :value ["k4" nil]}
+ {:process 295 :type :info :f :write :value ["k3" "v115"]}
+ {:process 300 :type :invoke :f :read :value ["k2" nil]}
+ {:process 302 :type :invoke :f :cas :value ["k2" "v52" "v113"]}
+ {:process 300 :type :info :f :read :value ["k2" nil]}
+ {:process 302 :type :info :f :cas :value ["k2" "v52" "v113"]}
+ {:process 298 :type :invoke :f :cas :value ["k3" "v11" "v115"]}
+ {:process 298 :type :info :f :cas :value ["k3" "v11" "v115"]}
+ {:process 305 :type :invoke :f :cas :value ["k0" "v44" "v117"]}
+ {:process 307 :type :invoke :f :read :value ["k2" nil]}
+ {:process 307 :type :info :f :read :value ["k2" nil]}
+ {:process 305 :type :info :f :cas :value ["k0" "v44" "v117"]}
+ {:process 310 :type :invoke :f :cas :value ["k2" "v55" "v118"]}
+ {:process 310 :type :info :f :cas :value ["k2" "v55" "v118"]}
+ {:process 303 :type :invoke :f :read :value ["k4" nil]}
+ {:process 303 :type :info :f :read :value ["k4" nil]}
+ {:process 312 :type :invoke :f :read :value ["k2" nil]}
+ {:process 315 :type :invoke :f :write :value ["k1" "v119"]}
+ {:process 315 :type :info :f :write :value ["k1" "v119"]}
+ {:process 312 :type :info :f :read :value ["k2" nil]}
+ {:process 308 :type :invoke :f :read :value ["k0" nil]}
+ {:process 308 :type :info :f :read :value ["k0" nil]}
+ {:process 320 :type :invoke :f :read :value ["k0" nil]}
+ {:process 320 :type :info :f :read :value ["k0" nil]}
+ {:process 313 :type :invoke :f :cas :value ["k3" "v11" "v118"]}
+ {:process 317 :type :invoke :f :write :value ["k2" "v116"]}
+ {:process 313 :type :info :f :cas :value ["k3" "v11" "v118"]}
+ {:process 317 :type :info :f :write :value ["k2" "v116"]}
+ {:process 325 :type :invoke :f :cas :value ["k0" "v44" "v121"]}
+ {:process 325 :type :info :f :cas :value ["k0" "v44" "v121"]}
+ {:process 322 :type :invoke :f :cas :value ["k0" "v33" "v117"]}
+ {:process 322 :type :info :f :cas :value ["k0" "v33" "v117"]}
+ {:process 318 :type :invoke :f :read :value ["k1" nil]}
+ {:process 330 :type :invoke :f :write :value ["k4" "v122"]}
+ {:process 318 :type :info :f :read :value ["k1" nil]}
+ {:process 330 :type :info :f :write :value ["k4" "v122"]}
+ {:process 323 :type :invoke :f :write :value ["k2" "v120"]}
+ {:process 327 :type :invoke :f :read :value ["k2" nil]}
+ {:process 327 :type :info :f :read :value ["k2" nil]}
+ {:process 323 :type :info :f :write :value ["k2" "v120"]}
+ {:process 335 :type :invoke :f :write :value ["k0" "v123"]}
+ {:process 328 :type :invoke :f :read :value ["k2" nil]}
+ {:process 335 :type :info :f :write :value ["k0" "v123"]}
+ {:process 328 :type :info :f :read :value ["k2" nil]}
+ {:process 333 :type :invoke :f :cas :value ["k1" "v29" "v122"]}
+ {:process 333 :type :info :f :cas :value ["k1" "v29" "v122"]}
+ {:process 332 :type :invoke :f :write :value ["k1" "v119"]}
+ {:process 340 :type :invoke :f :read :value ["k4" nil]}
+ {:process 332 :type :info :f :write :value ["k1" "v119"]}
+ {:process 340 :type :info :f :read :value ["k4" nil]}
+ {:process 345 :type :invoke :f :cas :value ["k0" "v44" "v125"]}
+ {:process 338 :type :invoke :f :write :value ["k1" "v123"]}
+ {:process 345 :type :info :f :cas :value ["k0" "v44" "v125"]}
+ {:process 338 :type :info :f :write :value ["k1" "v123"]}
+ {:process 337 :type :invoke :f :read :value ["k3" nil]}
+ {:process 350 :type :invoke :f :read :value ["k1" nil]}
+ {:process 337 :type :info :f :read :value ["k3" nil]}
+ {:process 350 :type :info :f :read :value ["k1" nil]}
+ {:process 343 :type :invoke :f :write :value ["k4" "v124"]}
+ {:process 343 :type :info :f :write :value ["k4" "v124"]}
+ {:process 348 :type :invoke :f :write :value ["k2" "v125"]}
+ {:process 355 :type :invoke :f :write :value ["k2" "v127"]}
+ {:process 348 :type :info :f :write :value ["k2" "v125"]}
+ {:process 355 :type :info :f :write :value ["k2" "v127"]}
+ {:process 342 :type :invoke :f :read :value ["k1" nil]}
+ {:process 360 :type :invoke :f :read :value ["k1" nil]}
+ {:process 342 :type :info :f :read :value ["k1" nil]}
+ {:process 360 :type :info :f :read :value ["k1" nil]}
+ {:process 353 :type :invoke :f :write :value ["k3" "v126"]}
+ {:process 347 :type :invoke :f :write :value ["k2" "v122"]}
+ {:process 353 :type :info :f :write :value ["k3" "v126"]}
+ {:process 347 :type :info :f :write :value ["k2" "v122"]}
+ {:process 365 :type :invoke :f :read :value ["k1" nil]}
+ {:process 352 :type :invoke :f :cas :value ["k2" "v52" "v123"]}
+ {:process 365 :type :info :f :read :value ["k1" nil]}
+ {:process 352 :type :info :f :cas :value ["k2" "v52" "v123"]}
+ {:process 370 :type :invoke :f :read :value ["k0" nil]}
+ {:process 358 :type :invoke :f :read :value ["k4" nil]}
+ {:process 358 :type :info :f :read :value ["k4" nil]}
+ {:process 370 :type :info :f :read :value ["k0" nil]}
+ {:process 357 :type :invoke :f :write :value ["k2" "v124"]}
+ {:process 357 :type :info :f :write :value ["k2" "v124"]}
+ {:process 363 :type :invoke :f :read :value ["k2" nil]}
+ {:process 362 :type :invoke :f :write :value ["k3" "v125"]}
+ {:process 375 :type :invoke :f :read :value ["k1" nil]}
+ {:process 362 :type :info :f :write :value ["k3" "v125"]}
+ {:process 375 :type :info :f :read :value ["k1" nil]}
+ {:process 363 :type :info :f :read :value ["k2" nil]}
+ {:process 367 :type :invoke :f :write :value ["k3" "v126"]}
+ {:process 368 :type :invoke :f :write :value ["k2" "v129"]}
+ {:process 367 :type :info :f :write :value ["k3" "v126"]}
+ {:process 368 :type :info :f :write :value ["k2" "v129"]}
+ {:process 372 :type :invoke :f :write :value ["k3" "v127"]}
+ {:process 380 :type :invoke :f :cas :value ["k0" "v44" "v132"]}
+ {:process 380 :type :info :f :cas :value ["k0" "v44" "v132"]}
+ {:process 372 :type :info :f :write :value ["k3" "v127"]}
+ {:process 373 :type :invoke :f :write :value ["k1" "v130"]}
+ {:process 373 :type :info :f :write :value ["k1" "v130"]}
+ {:process 385 :type :invoke :f :cas :value ["k4" "v35" "v133"]}
+ {:process 377 :type :invoke :f :write :value ["k3" "v128"]}
+ {:process 377 :type :info :f :write :value ["k3" "v128"]}
+ {:process 385 :type :info :f :cas :value ["k4" "v35" "v133"]}
+ {:process 378 :type :invoke :f :cas :value ["k4" "v55" "v131"]}
+ {:process 390 :type :invoke :f :read :value ["k0" nil]}
+ {:process 390 :type :info :f :read :value ["k0" nil]}
+ {:process 378 :type :info :f :cas :value ["k4" "v55" "v131"]}
+ {:process 382 :type :invoke :f :read :value ["k1" nil]}
+ {:process 383 :type :invoke :f :read :value ["k3" nil]}
+ {:process 382 :type :info :f :read :value ["k1" nil]}
+ {:process 383 :type :info :f :read :value ["k3" nil]}
+ {:process 395 :type :invoke :f :write :value ["k4" "v135"]}
+ {:process 388 :type :invoke :f :read :value ["k2" nil]}
+ {:process 388 :type :info :f :read :value ["k2" nil]}
+ {:process 395 :type :info :f :write :value ["k4" "v135"]}
+ {:process 387 :type :invoke :f :write :value ["k0" "v130"]}
+ {:process 387 :type :info :f :write :value ["k0" "v130"]}
+ {:process 400 :type :invoke :f :read :value ["k1" nil]}
+ {:process 393 :type :invoke :f :write :value ["k3" "v134"]}
+ {:process 400 :type :info :f :read :value ["k1" nil]}
+ {:process 393 :type :info :f :write :value ["k3" "v134"]}
+ {:process 392 :type :invoke :f :read :value ["k4" nil]}
+ {:process 392 :type :info :f :read :value ["k4" nil]}
+ {:process 405 :type :invoke :f :cas :value ["k0" "v44" "v137"]}
+ {:process 398 :type :invoke :f :cas :value ["k0" "v48" "v135"]}
+ {:process 405 :type :info :f :cas :value ["k0" "v44" "v137"]}
+ {:process 398 :type :info :f :cas :value ["k0" "v48" "v135"]}
+ {:process 397 :type :invoke :f :cas :value ["k2" "v52" "v132"]}
+ {:process 397 :type :info :f :cas :value ["k2" "v52" "v132"]}
+ {:process 410 :type :invoke :f :write :value ["k2" "v138"]}
+ {:process 403 :type :invoke :f :cas :value ["k4" "v55" "v136"]}
+ {:process 403 :type :info :f :cas :value ["k4" "v55" "v136"]}
+ {:process 410 :type :info :f :write :value ["k2" "v138"]}
+ {:process 402 :type :invoke :f :cas :value ["k3" "v51" "v133"]}
+ {:process 402 :type :info :f :cas :value ["k3" "v51" "v133"]}
+ {:process 415 :type :invoke :f :read :value ["k4" nil]}
+ {:process 415 :type :info :f :read :value ["k4" nil]}
+ {:process 408 :type :invoke :f :write :value ["k0" "v137"]}
+ {:process 408 :type :info :f :write :value ["k0" "v137"]}
+ {:process 407 :type :invoke :f :cas :value ["k1" "v50" "v134"]}
+ {:process 420 :type :invoke :f :write :value ["k0" "v140"]}
+ {:process 407 :type :info :f :cas :value ["k1" "v50" "v134"]}
+ {:process 420 :type :info :f :write :value ["k0" "v140"]}
+ {:process 425 :type :invoke :f :write :value ["k4" "v141"]}
+ {:process 425 :type :info :f :write :value ["k4" "v141"]}
+ {:process 413 :type :invoke :f :cas :value ["k3" "v11" "v138"]}
+ {:process 412 :type :invoke :f :read :value ["k4" nil]}
+ {:process 413 :type :info :f :cas :value ["k3" "v11" "v138"]}
+ {:process 412 :type :info :f :read :value ["k4" nil]}
+ {:process 430 :type :invoke :f :read :value ["k3" nil]}
+ {:process 417 :type :invoke :f :cas :value ["k4" "v44" "v136"]}
+ {:process 417 :type :info :f :cas :value ["k4" "v44" "v136"]}
+ {:process 418 :type :invoke :f :write :value ["k2" "v139"]}
+ {:process 422 :type :invoke :f :read :value ["k0" nil]}
+ {:process 430 :type :info :f :read :value ["k3" nil]}
+ {:process 435 :type :invoke :f :write :value ["k3" "v143"]}
+ {:process 418 :type :info :f :write :value ["k2" "v139"]}
+ {:process 435 :type :info :f :write :value ["k3" "v143"]}
+ {:process 422 :type :info :f :read :value ["k0" nil]}
+ {:process 440 :type :invoke :f :read :value ["k3" nil]}
+ {:process 423 :type :invoke :f :read :value ["k3" nil]}
+ {:process 423 :type :info :f :read :value ["k3" nil]}
+ {:process 440 :type :info :f :read :value ["k3" nil]}
+ {:process 427 :type :invoke :f :cas :value ["k4" "v44" "v138"]}
+ {:process 427 :type :info :f :cas :value ["k4" "v44" "v138"]}
+ {:process 428 :type :invoke :f :write :value ["k1" "v141"]}
+ {:process 428 :type :info :f :write :value ["k1" "v141"]}
+ {:process 432 :type :invoke :f :read :value ["k1" nil]}
+ {:process 445 :type :invoke :f :write :value ["k0" "v145"]}
+ {:process 433 :type :invoke :f :read :value ["k2" nil]}
+ {:process 432 :type :info :f :read :value ["k1" nil]}
+ {:process 437 :type :invoke :f :read :value ["k0" nil]}
+ {:process 296 :type :info :f :write :value ["k0" "v117"]}
+ {:process 284 :type :info :f :read :value ["k1" nil]}
+ {:process 289 :type :invoke :f :write :value ["k4" "v121"]}
+ {:process 289 :type :info :f :write :value ["k4" "v121"]}
+ {:process 301 :type :invoke :f :write :value ["k0" "v118"]}
+ {:process 301 :type :info :f :write :value ["k0" "v118"]}
+ {:process 294 :type :invoke :f :write :value ["k2" "v122"]}
+ {:process 306 :type :invoke :f :write :value ["k1" "v119"]}
+ {:process 433 :type :info :f :read :value ["k2" nil]}
+ {:process 445 :type :info :f :write :value ["k0" "v145"]}
+ {:process 450 :type :invoke :f :read :value ["k4" nil]}
+ {:process 450 :type :info :f :read :value ["k4" nil]}
+ {:process 438 :type :invoke :f :write :value ["k4" "v143"]}
+ {:process 437 :type :info :f :read :value ["k0" nil]}
+ {:process 438 :type :info :f :write :value ["k4" "v143"]}
+ {:process 442 :type :invoke :f :write :value ["k3" "v141"]}
+ {:process 455 :type :invoke :f :read :value ["k4" nil]}
+ {:process 442 :type :info :f :write :value ["k3" "v141"]}
+ {:process 455 :type :info :f :read :value ["k4" nil]}
+ {:process 443 :type :invoke :f :write :value ["k3" "v144"]}
+ {:process 443 :type :info :f :write :value ["k3" "v144"]}
+ {:process 448 :type :invoke :f :read :value ["k1" nil]}
+ {:process 447 :type :invoke :f :cas :value ["k2" "v52" "v142"]}
+ {:process 460 :type :invoke :f :cas :value ["k1" "v54" "v148"]}
+ {:process 447 :type :info :f :cas :value ["k2" "v52" "v142"]}
+ {:process 452 :type :invoke :f :read :value ["k1" nil]}
+ {:process 452 :type :info :f :read :value ["k1" nil]}
+ {:process 460 :type :info :f :cas :value ["k1" "v54" "v148"]}
+ {:process 294 :type :info :f :write :value ["k2" "v122"]}
+ {:process 306 :type :info :f :write :value ["k1" "v119"]}
+ {:process 448 :type :info :f :read :value ["k1" nil]}
+ {:process 465 :type :invoke :f :read :value ["k3" nil]}
+ {:process 311 :type :invoke :f :read :value ["k4" nil]}
+ {:process 299 :type :invoke :f :cas :value ["k3" "v60" "v123"]}
+ {:process 457 :type :invoke :f :write :value ["k4" "v144"]}
+ {:process 453 :type :invoke :f :cas :value ["k4" "v55" "v146"]}
+ {:process 465 :type :info :f :read :value ["k3" nil]}
+ {:process 457 :type :info :f :write :value ["k4" "v144"]}
+ {:process 299 :type :info :f :cas :value ["k3" "v60" "v123"]}
+ {:process 311 :type :info :f :read :value ["k4" nil]}
+ {:process 470 :type :invoke :f :cas :value ["k4" "v35" "v150"]}
+ {:process 453 :type :info :f :cas :value ["k4" "v55" "v146"]}
+ {:process 458 :type :invoke :f :write :value ["k2" "v147"]}
+ {:process 316 :type :invoke :f :cas :value ["k2" "v43" "v121"]}
+ {:process 462 :type :invoke :f :write :value ["k2" "v145"]}
+ {:process 304 :type :invoke :f :cas :value ["k2" "v63" "v124"]}
+ {:process 470 :type :info :f :cas :value ["k4" "v35" "v150"]}
+ {:process 458 :type :info :f :write :value ["k2" "v147"]}
+ {:process 304 :type :info :f :cas :value ["k2" "v63" "v124"]}
+ {:process 462 :type :info :f :write :value ["k2" "v145"]}
+ {:process 316 :type :info :f :cas :value ["k2" "v43" "v121"]}
+ {:process 475 :type :invoke :f :write :value ["k2" "v151"]}
+ {:process 321 :type :invoke :f :write :value ["k1" "v122"]}
+ {:process 467 :type :invoke :f :write :value ["k2" "v146"]}
+ {:process 463 :type :invoke :f :write :value ["k3" "v148"]}
+ {:process 309 :type :invoke :f :write :value ["k1" "v125"]}
+ {:process 475 :type :info :f :write :value ["k2" "v151"]}
+ {:process 321 :type :info :f :write :value ["k1" "v122"]}
+ {:process 326 :type :invoke :f :write :value ["k4" "v123"]}
+ {:process 463 :type :info :f :write :value ["k3" "v148"]}
+ {:process 467 :type :info :f :write :value ["k2" "v146"]}
+ {:process 480 :type :invoke :f :cas :value ["k1" "v54" "v152"]}
+ {:process 309 :type :info :f :write :value ["k1" "v125"]}
+ {:process 468 :type :invoke :f :cas :value ["k0" "v48" "v149"]}
+ {:process 314 :type :invoke :f :write :value ["k4" "v126"]}
+ {:process 472 :type :invoke :f :cas :value ["k1" "v50" "v147"]}
+ {:process 326 :type :info :f :write :value ["k4" "v123"]}
+ {:process 480 :type :info :f :cas :value ["k1" "v54" "v152"]}
+ {:process 331 :type :invoke :f :read :value ["k4" nil]}
+ {:process 468 :type :info :f :cas :value ["k0" "v48" "v149"]}
+ {:process 485 :type :invoke :f :read :value ["k0" nil]}
+ {:process 314 :type :info :f :write :value ["k4" "v126"]}
+ {:process 472 :type :info :f :cas :value ["k1" "v50" "v147"]}
+ {:process 473 :type :invoke :f :read :value ["k0" nil]}
+ {:process 319 :type :invoke :f :read :value ["k1" nil]}
+ {:process 477 :type :invoke :f :write :value ["k2" "v148"]}
+ {:process 331 :type :info :f :read :value ["k4" nil]}
+ {:process 485 :type :info :f :read :value ["k0" nil]}
+ {:process 473 :type :info :f :read :value ["k0" nil]}
+ {:process 319 :type :info :f :read :value ["k1" nil]}
+ {:process 477 :type :info :f :write :value ["k2" "v148"]}
+]

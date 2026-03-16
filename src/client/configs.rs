@@ -23,7 +23,6 @@ impl ClientConfig {
         };
         let config = Config::builder()
             .add_source(File::with_name(&config_file))
-            // Add-in/overwrite settings with environment variables (with a prefix of OMNIPAXOS)
             .add_source(Environment::with_prefix("OMNIPAXOS").try_parsing(true))
             .build()?;
         config.try_deserialize()

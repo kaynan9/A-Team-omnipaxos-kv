@@ -1,0 +1,85 @@
+name: Linearizability Check
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      history_file:
+        description: "Path to history.edn file (relative to repo root)"
+        required: false
+        default: "history.edn"
+
+jobs:
+  # Job 1: Run Rust unit tests (including linearizability property tests)
+  unit-tests:
+    name: Linearizability Unit Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-action/setup@v1
+
+      - name: Cache Cargo
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: cargo-${{ hashFiles('Cargo.lock') }}
+          restore-keys: cargo-
+
+      - name: Run linearizability property tests
+        run: cargo test --release database::tests -- --nocapture
+
+  # Job 2: Verify a committed history.edn with Knossos
+  check-linearizability:
+    name: Knossos Linearizability Verification
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Clojure CLI
+        uses: DeLaGuardo/setup-clojure@13.3
+        with:
+          cli: latest
+
+      - name: Cache Clojure dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.m2/repository
+            ~/.gitlibs
+            ~/.clojure/.cpcache
+          key: clojure-knossos-${{ hashFiles('knossos/deps.edn') }}
+          restore-keys: clojure-knossos-
+
+      - name: Verify history.edn exists
+        run: |
+          HISTORY="${{ github.event.inputs.history_file || 'history.edn' }}"
+          if [ ! -f "$HISTORY" ]; then
+            echo "::error::History file not found: $HISTORY"
+            echo "The test harness must be run first to generate this file."
+            exit 1
+          fi
+          echo "HISTORY_FILE=$HISTORY" >> "$GITHUB_ENV"
+          echo "Found history file: $HISTORY ($(wc -l < "$HISTORY") lines)"
+
+      - name: Run Knossos linearizability checker
+        run: ./check-linearizability.sh "$HISTORY_FILE"
+
+      - name: Upload history on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: failed-history
+          path: ${{ env.HISTORY_FILE }}
+          retention-days: 30

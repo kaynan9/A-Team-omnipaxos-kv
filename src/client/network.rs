@@ -107,7 +107,6 @@ impl Network {
         }
     }
 
-    // Removes all server connections and ends their corresponding tasks
     pub fn shutdown(&mut self) {
         let connection_count = self.server_connections.len();
         for server_connection in self.server_connections.drain(..) {
@@ -122,7 +121,6 @@ impl Network {
 }
 
 struct ServerConnection {
-    // server_id: NodeId,
     reader_task: JoinHandle<()>,
     writer_task: JoinHandle<()>,
     outgoing_messages: Sender<ClientMessage>,
@@ -136,7 +134,6 @@ impl ServerConnection {
         batch_size: usize,
         incoming_messages: Sender<ServerMessage>,
     ) -> Self {
-        // Reader Actor
         let reader_task = tokio::spawn(async move {
             let mut buf_reader = reader.ready_chunks(batch_size);
             while let Some(messages) = buf_reader.next().await {
@@ -148,7 +145,6 @@ impl ServerConnection {
                 }
             }
         });
-        // Writer Actor
         let (message_tx, mut message_rx) = mpsc::channel(batch_size);
         let writer_task = tokio::spawn(async move {
             let mut buffer = Vec::with_capacity(batch_size);
@@ -167,7 +163,6 @@ impl ServerConnection {
             info!("Connection to server {server_id} closed");
         });
         ServerConnection {
-            // server_id,
             reader_task,
             writer_task,
             outgoing_messages: message_tx,

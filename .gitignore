@@ -60,3 +60,18 @@ Temporary Items
 *.icloud
 
 # End of https://www.toptal.com/developers/gitignore/api/macos
+
+# Agentic Workspace Context Files
+CLAUDE.md
+AGENTS.md
+PROJECT_STRUCTURE.md
+general_index.md
+detailed_index.md
+Project_Evaluation.md
+command_checklist.md
+project_checklist_codex.md
+project_checklist_Gemini.md
+command_checklist_og.md
+things_to_adress.md
+things_to_address_phases.md
+.claude/
