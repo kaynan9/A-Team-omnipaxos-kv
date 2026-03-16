@@ -57,9 +57,6 @@ async fn main() {
             let mut gen = Generator::new(key_range, read_ratio, cas_ratio);
             let mut client = TestClient::new(servers, i % num_servers);
             let mut rng = StdRng::from_entropy();
-            // Each client starts with its own process ID and steps by num_clients
-            // on each indeterminate result, so IDs across clients never collide:
-            //   client 0 → 0, 5, 10, ...  client 1 → 1, 6, 11, ...
             let mut process_id = i;
 
             for _ in 0..ops_per_client {
@@ -97,15 +94,10 @@ async fn main() {
                 let result = client.send_op(&op).await;
 
                 let (event_type, result_value, error_msg) = match (&result, &func) {
-                    // Read :ok — use the value the server returned.
                     (OpResult::Ok(v), FunctionType::Read) => (EventType::Ok, v.clone(), None),
-                    // Write / CAS :ok — echo back the value from the original op.
                     (OpResult::Ok(_), _) => (EventType::Ok, invoke_value.clone(), None),
                     (OpResult::PreconditionFailed(msg), _) => (EventType::Fail, invoke_value.clone(), Some(msg.clone())),
                     (OpResult::SystemError(msg), _) => (EventType::Fail, invoke_value.clone(), Some(msg.clone())),
-                    // Indeterminate: record a visible :info event so the EDN file has a
-                    // paired completion for every invoke, then advance to a fresh process ID
-                    // so the next op does not reuse this process slot.
                     (OpResult::Indeterminate, _) => (EventType::Info, invoke_value.clone(), None),
                 };
 
@@ -119,13 +111,11 @@ async fn main() {
                     error: error_msg,
                 });
 
-                // Advance to a fresh process ID after an indeterminate result so that
-                // subsequent ops on this client do not reuse the same process slot.
+              
                 if matches!(result, OpResult::Indeterminate) {
                     process_id += num_clients;
                 }
 
-                // Update known_values on confirmed write success.
                 match (&result, &op) {
                     (OpResult::Ok(_), Operation::Put { key, value }) => {
                         gen.known_values.insert(key.clone(), value.clone());
@@ -180,7 +170,6 @@ async fn main() {
     println!("  :info        {} (indeterminate)", infos);
     println!("history written to: {}", cfg.output);
 
-    // --- Write summary file ---
     let summary_path = if cfg.output.ends_with(".edn") {
         format!("{}.summary.txt", &cfg.output[..cfg.output.len() - 4])
     } else {
@@ -233,27 +222,24 @@ async fn main() {
     std::fs::write(&summary_path, &summary).expect("failed to write summary file");
     println!("summary written to:  {}", summary_path);
 
-    // --- Convergence check (post-fault liveness verification) ---
-    // For each server, write a sentinel key then read it back to confirm
-    // that server can serve both writes and reads independently.
+
     if cfg.convergence_check {
         println!("\n--- convergence check ---");
 
         for (idx, server_url) in servers.iter().enumerate() {
-            // Pin this client to a single server by giving it a one-element list.
             let mut conv_client = TestClient::new(vec![server_url.clone()], 0);
 
             let sentinel_key = format!("__conv_check_{idx}__");
             let sentinel_val = format!("probe_{idx}");
 
-            // PUT
+            
             let put_op = Operation::Put {
                 key: sentinel_key.clone(),
                 value: sentinel_val.clone(),
             };
             let put_ok = matches!(conv_client.send_op(&put_op).await, OpResult::Ok(_));
 
-            // GET
+            
             let get_op = Operation::Get { key: sentinel_key.clone() };
             let get_ok = matches!(conv_client.send_op(&get_op).await, OpResult::Ok(_));
 

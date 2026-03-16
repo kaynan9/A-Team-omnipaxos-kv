@@ -33,7 +33,6 @@ pub mod messages {
         CasOk(CommandId),
         CasFailed(CommandId, Option<String>),
 
-        // Generic error for a specific command id (e.g., append failed / unavailable)
         Error(CommandId, String),
 
         StartSignal(Timestamp),
@@ -78,7 +77,6 @@ pub mod kv {
         Get(String),
 
         // CAS(key, expected, new_value)
-        // expected = None means "key must be missing"
         Cas(String, Option<String>, String),
     }
 
@@ -100,26 +98,21 @@ pub mod kv {
                     }
                     KVCommand::Delete(key) => {
                         if snapshotted.remove(key).is_none() {
-                            // key was not in the snapshot
                             deleted_keys.push(key.clone());
                         }
                     }
                     KVCommand::Get(_) => (),
 
                     KVCommand::Cas(key, expected, new_value) => {
-                        // Snapshot model for CAS:
-                        // Apply only if expected matches current (Some(v) or None).
                         let current = snapshotted.get(key).cloned();
                         if &current == expected {
                             snapshotted.insert(key.clone(), new_value.clone());
-                            // If key was previously considered deleted, it's no longer deleted
                             deleted_keys.retain(|k| k != key);
                         }
                     }
                 }
             }
 
-            // remove keys that were put back
             deleted_keys.retain(|k| !snapshotted.contains_key(k));
 
             Self {

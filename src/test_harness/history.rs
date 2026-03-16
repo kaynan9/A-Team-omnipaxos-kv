@@ -51,7 +51,6 @@ impl History {
         self.events.lock().unwrap().len()
     }
 
-    /// Returns (invoke, ok, fail, info) counts.
     pub fn type_counts(&self) -> (usize, usize, usize, usize) {
         let events = self.events.lock().unwrap();
         let mut invoke = 0;
@@ -69,7 +68,6 @@ impl History {
         (invoke, ok, fail, info)
     }
 
-    /// Returns (precondition_failed, system_error) counts.
     pub fn error_counts(&self) -> (usize, usize) {
         let events = self.events.lock().unwrap();
         let mut precondition_failed = 0;
@@ -107,17 +105,14 @@ impl History {
 
             let value_edn = match e.function {
                 FunctionType::Read => {
-                    // :value ["key" nil-or-"val"]
                     let v = edn_str(e.value.as_deref());
                     format!("[{} {}]", edn_str(Some(&e.key)), v)
                 }
                 FunctionType::Write => {
-                    // :value ["key" "val"]
                     let v = edn_str(e.value.as_deref());
                     format!("[{} {}]", edn_str(Some(&e.key)), v)
                 }
                 FunctionType::Cas => {
-                    // :value ["key" expected new_value]
                     let exp = edn_str(e.expected.as_deref());
                     let new = edn_str(e.value.as_deref());
                     format!("[{} {} {}]", edn_str(Some(&e.key)), exp, new)
@@ -225,18 +220,15 @@ mod tests {
         let contents = std::fs::read_to_string(path).expect("could not read output file");
         std::fs::remove_file(path).ok();
 
-        // Outer brackets.
         assert!(contents.starts_with('['), "should start with [");
         assert!(contents.trim_end().ends_with(']'), "should end with ]");
 
-        // Every line between the brackets must be a valid EDN map line.
         let lines: Vec<&str> = contents
             .lines()
             .filter(|l| l.trim_start().starts_with('{'))
             .collect();
         assert_eq!(lines.len(), 4, "expected 4 event lines, got {}", lines.len());
 
-        // Spot-check specific fields.
         assert!(lines[0].contains(":type :invoke"), "line 0 should be :invoke");
         assert!(lines[0].contains(":f :write"),     "line 0 should be :write");
         assert!(lines[0].contains(r#""k1""#),       "line 0 should contain key k1");

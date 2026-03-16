@@ -56,7 +56,6 @@ mod tests {
 
     #[test]
     fn next_op_covers_all_variants_and_keys_in_range() {
-        // Use ratios that give every branch a fair share.
         let key_range = 5;
         let mut gen = Generator::new(key_range, 0.4, 0.3);
 

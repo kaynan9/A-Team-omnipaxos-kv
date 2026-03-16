@@ -2,9 +2,7 @@ use futures::future::join_all;
 use rand::{Rng, SeedableRng, rngs::StdRng};
 use tokio::time::{Duration, sleep};
 
-// ---------------------------------------------------------------------------
-// Docker helpers — network partitioning
-// ---------------------------------------------------------------------------
+
 
 async fn docker_network_disconnect(network: &str, container: &str) -> Result<(), String> {
     let network = network.to_string();
@@ -42,11 +40,7 @@ async fn docker_network_connect(network: &str, container: &str) -> Result<(), St
     .map_err(|e| format!("spawn_blocking panicked: {e}"))?
 }
 
-// ---------------------------------------------------------------------------
-// Docker helpers — crash (stop/start)
-// ---------------------------------------------------------------------------
 
-/// Kills a Docker container with SIGKILL (immediate crash, no graceful shutdown).
 async fn docker_kill_container(container: &str) -> Result<(), String> {
     let container = container.to_string();
     tokio::task::spawn_blocking(move || {
@@ -64,7 +58,6 @@ async fn docker_kill_container(container: &str) -> Result<(), String> {
     .map_err(|e| format!("spawn_blocking panicked: {e}"))?
 }
 
-/// Restarts a stopped Docker container.
 async fn docker_start_container(container: &str) -> Result<(), String> {
     let container = container.to_string();
     tokio::task::spawn_blocking(move || {
@@ -82,12 +75,6 @@ async fn docker_start_container(container: &str) -> Result<(), String> {
     .map_err(|e| format!("spawn_blocking panicked: {e}"))?
 }
 
-// ---------------------------------------------------------------------------
-// Group network operations — disconnect/reconnect multiple containers at once
-// ---------------------------------------------------------------------------
-
-/// Disconnects all containers from the network concurrently.
-/// Returns the list of containers that were successfully disconnected.
 async fn docker_network_disconnect_group(network: &str, containers: &[String]) -> Vec<String> {
     let futures: Vec<_> = containers
         .iter()
@@ -117,8 +104,6 @@ async fn docker_network_disconnect_group(network: &str, containers: &[String]) -
     disconnected
 }
 
-/// Reconnects all containers to the network concurrently.
-/// Returns the list of containers that were successfully reconnected.
 async fn docker_network_connect_group(network: &str, containers: &[String]) -> Vec<String> {
     let futures: Vec<_> = containers
         .iter()
@@ -148,9 +133,6 @@ async fn docker_network_connect_group(network: &str, containers: &[String]) -> V
     reconnected
 }
 
-// ---------------------------------------------------------------------------
-// Cleanup functions
-// ---------------------------------------------------------------------------
 
 async fn heal_all(network: &str, partitioned: &[String]) {
     for container in partitioned {
@@ -172,14 +154,7 @@ async fn restore_all(stopped: &[String]) {
     }
 }
 
-// ---------------------------------------------------------------------------
-// Fault schedules
-// ---------------------------------------------------------------------------
 
-/// Runs partition faults using random partition sets.
-/// Each round selects a random group of 1..=(n-1) containers, disconnects them
-/// simultaneously, holds for 10s, then reconnects the group.
-/// Returns containers still partitioned at the end (for cleanup).
 async fn run_partition_faults(network: String, containers: Vec<String>) -> Vec<String> {
     if containers.is_empty() {
         return Vec::new();
@@ -193,7 +168,6 @@ async fn run_partition_faults(network: String, containers: Vec<String>) -> Vec<S
 
     let rounds = containers.len();
     for round in 0..rounds {
-        // Select a random partition set: 1..=(n-1) containers
         let set_size = rng.gen_range(1..containers.len().max(2));
         let mut candidates = containers.clone();
         let mut partition_set: Vec<String> = Vec::with_capacity(set_size);
@@ -211,11 +185,8 @@ async fn run_partition_faults(network: String, containers: Vec<String>) -> Vec<S
             partition_set
         );
 
-        // --- Disconnect the group simultaneously ---
         let disconnected = docker_network_disconnect_group(&network, &partition_set).await;
 
-        // If the first container (initial leader) is among the newly partitioned nodes,
-        // make it explicit in the log that this is a leader-isolation scenario.
         if let Some(leader) = containers.first() {
             if disconnected.contains(leader) {
                 println!(
@@ -228,11 +199,9 @@ async fn run_partition_faults(network: String, containers: Vec<String>) -> Vec<S
 
         partitioned.extend(disconnected);
 
-        // Hold partition for 10s
         println!("NEMESIS [partition]: holding partition for 10s...");
         sleep(Duration::from_secs(10)).await;
 
-        // --- Reconnect the group simultaneously ---
         println!(
             "NEMESIS [partition]: healing group: {:?}",
             partition_set
@@ -242,7 +211,6 @@ async fn run_partition_faults(network: String, containers: Vec<String>) -> Vec<S
             partitioned.retain(|p| p != c);
         }
 
-        // Recovery window before next fault
         println!("NEMESIS [partition]: recovery window 5s...");
         sleep(Duration::from_secs(5)).await;
     }
@@ -250,8 +218,6 @@ async fn run_partition_faults(network: String, containers: Vec<String>) -> Vec<S
     partitioned
 }
 
-/// Runs crash faults on randomly selected containers.
-/// Returns containers still stopped at the end (for cleanup).
 async fn run_crash_faults(containers: Vec<String>) -> Vec<String> {
     if containers.is_empty() {
         return Vec::new();
@@ -265,7 +231,6 @@ async fn run_crash_faults(containers: Vec<String>) -> Vec<String> {
 
     let rounds = containers.len();
     for round in 0..rounds {
-        // Pick a random container that is NOT already stopped
         let alive: Vec<&String> = containers
             .iter()
             .filter(|c| !stopped.contains(c))
@@ -278,7 +243,6 @@ async fn run_crash_faults(containers: Vec<String>) -> Vec<String> {
 
         let target = alive[rng.gen_range(0..alive.len())].clone();
 
-        // --- Kill the node ---
         println!("NEMESIS [crash]: killing {target} (round {round})");
         match docker_kill_container(&target).await {
             Ok(()) => {
@@ -291,12 +255,10 @@ async fn run_crash_faults(containers: Vec<String>) -> Vec<String> {
             }
         }
 
-        // Hold the crash for a random duration between 5–15s
         let down_secs = rng.gen_range(5u64..=15);
         println!("NEMESIS [crash]: {target} down for {down_secs}s...");
         sleep(Duration::from_secs(down_secs)).await;
 
-        // --- Restart the node ---
         println!("NEMESIS [crash]: restarting {target}");
         match docker_start_container(&target).await {
             Ok(()) => {
@@ -305,11 +267,9 @@ async fn run_crash_faults(containers: Vec<String>) -> Vec<String> {
             }
             Err(e) => {
                 eprintln!("NEMESIS [crash]: ERROR restarting {target}: {e}");
-                // Leave in `stopped`; restore_all() will retry
             }
         }
 
-        // Recovery window before next crash
         println!("NEMESIS [crash]: recovery window 5s...");
         sleep(Duration::from_secs(5)).await;
     }
@@ -317,13 +277,7 @@ async fn run_crash_faults(containers: Vec<String>) -> Vec<String> {
     stopped
 }
 
-// ---------------------------------------------------------------------------
-// Quorum loss — kill a majority of nodes simultaneously
-// ---------------------------------------------------------------------------
 
-/// Kills a majority of nodes simultaneously so the cluster loses quorum,
-/// holds for a random duration, then restarts them all.
-/// Returns containers still stopped at the end (for cleanup).
 async fn run_quorum_loss_faults(containers: Vec<String>) -> Vec<String> {
     if containers.is_empty() {
         return Vec::new();
@@ -338,7 +292,6 @@ async fn run_quorum_loss_faults(containers: Vec<String>) -> Vec<String> {
 
     let rounds = containers.len();
     for round in 0..rounds {
-        // Select `majority` random alive containers to kill
         let alive: Vec<String> = containers
             .iter()
             .filter(|c| !stopped.contains(c))
@@ -354,7 +307,6 @@ async fn run_quorum_loss_faults(containers: Vec<String>) -> Vec<String> {
             continue;
         }
 
-        // Pick `majority` random containers from alive set
         let mut candidates = alive;
         let mut kill_set: Vec<String> = Vec::with_capacity(majority);
         for _ in 0..majority {
@@ -367,7 +319,6 @@ async fn run_quorum_loss_faults(containers: Vec<String>) -> Vec<String> {
             kill_set
         );
 
-        // Kill all selected containers concurrently
         let kill_futures: Vec<_> = kill_set
             .iter()
             .map(|c| {
@@ -394,12 +345,10 @@ async fn run_quorum_loss_faults(containers: Vec<String>) -> Vec<String> {
             }
         }
 
-        // Hold for 5-15s random duration (cluster has NO quorum)
         let down_secs = rng.gen_range(5u64..=15);
         println!("NEMESIS [quorum-loss]: cluster has no quorum — holding for {down_secs}s...");
         sleep(Duration::from_secs(down_secs)).await;
 
-        // Restart all killed containers concurrently
         let start_futures: Vec<_> = killed_this_round
             .iter()
             .map(|c| {
@@ -420,12 +369,10 @@ async fn run_quorum_loss_faults(containers: Vec<String>) -> Vec<String> {
                 }
                 Err(e) => {
                     eprintln!("NEMESIS [quorum-loss]: ERROR restarting {container}: {e}");
-                    // Leave in `stopped`; restore_all() will retry
                 }
             }
         }
 
-        // Recovery window before next round
         println!("NEMESIS [quorum-loss]: recovery window 5s...");
         sleep(Duration::from_secs(5)).await;
     }
@@ -433,9 +380,7 @@ async fn run_quorum_loss_faults(containers: Vec<String>) -> Vec<String> {
     stopped
 }
 
-// ---------------------------------------------------------------------------
-// Public entry point
-// ---------------------------------------------------------------------------
+
 
 pub async fn run_nemesis_schedule(
     network: String,
@@ -446,10 +391,8 @@ pub async fn run_nemesis_schedule(
     let mut all_partitioned: Vec<String> = Vec::new();
     let mut all_stopped: Vec<String> = Vec::new();
 
-    // Collect concurrent fault task handles
     let mut fault_handles: Vec<tokio::task::JoinHandle<(Vec<String>, Vec<String>)>> = Vec::new();
 
-    // Partition faults always run
     {
         let net = network.clone();
         let ctrs = containers.clone();
@@ -475,7 +418,6 @@ pub async fn run_nemesis_schedule(
         }));
     }
 
-    // Await all fault tasks and collect leftovers
     for handle in fault_handles {
         match handle.await {
             Ok((partitioned, stopped)) => {
@@ -488,7 +430,6 @@ pub async fn run_nemesis_schedule(
         }
     }
 
-    // Unconditional cleanup — reconnect any still-partitioned, restart any still-stopped
     heal_all(&network, &all_partitioned).await;
     restore_all(&all_stopped).await;
     println!("NEMESIS: done — all containers restored");

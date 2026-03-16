@@ -3,7 +3,7 @@
 --- config ---
 servers:             http://localhost:8081,http://localhost:8082,http://localhost:8083
 num_clients:         5
-ops_per_client:      1500
+ops_per_client:      100
 key_range:           5
 read_ratio:          0.4
 cas_ratio:           0.2
@@ -12,8 +12,8 @@ nemesis:             false
 convergence_check:   false
 
 --- event counts ---
-total:   15000
-:invoke  7500
-:ok      6287
-:fail    1213 (precondition-failed: 1213, system-error: 0)
+total:   1000
+:invoke  500
+:ok      415
+:fail    85 (precondition-failed: 85, system-error: 0)
 :info    0 (indeterminate)

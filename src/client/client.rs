@@ -37,7 +37,6 @@ impl Client {
     }
 
     pub async fn run(&mut self) {
-        // Wait for server to signal start
         info!("{}: Waiting for start signal from server", self.id);
         match self.network.server_messages.recv().await {
             Some(ServerMessage::StartSignal(start_time)) => {
@@ -46,14 +45,12 @@ impl Client {
             _ => panic!("Error waiting for start signal"),
         }
 
-        // Early end
         let intervals = self.config.requests.clone();
         if intervals.is_empty() {
             self.save_results().expect("Failed to save results");
             return;
         }
 
-        // Initialize intervals
         let mut rng = rand::thread_rng();
         let mut intervals = intervals.iter();
         let first_interval = intervals.next().unwrap();
@@ -62,7 +59,6 @@ impl Client {
         let mut next_interval = interval(first_interval.get_interval_duration());
         let _ = next_interval.tick().await;
 
-        // Main event loop
         info!("{}: Starting requests", self.id);
         loop {
             tokio::select! {
@@ -138,12 +134,9 @@ impl Client {
         return false;
     }
 
-    // Wait until the scheduled start time to synchronize client starts.
-    // If start time has already passed, start immediately.
+
     async fn wait_until_sync_time(config: &mut ClientConfig, scheduled_start_utc_ms: i64) {
-        // // Desync the clients a bit
-        // let mut rng = rand::thread_rng();
-        // let scheduled_start_utc_ms = scheduled_start_utc_ms + rng.gen_range(1..100);
+
         let now = Utc::now();
         let milliseconds_until_sync = scheduled_start_utc_ms - now.timestamp_millis();
         config.sync_time = Some(milliseconds_until_sync);

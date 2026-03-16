@@ -16,11 +16,11 @@ nemesis_quorum_loss: false
 convergence_check:   false
 
 --- event counts ---
-total:   13668
-:invoke  6834
-:ok      5728
-:fail    1094 (precondition-failed: 1094, system-error: 0)
-:info    12 (indeterminate)
+total:   3786
+:invoke  1893
+:ok      1521
+:fail    311 (precondition-failed: 311, system-error: 0)
+:info    61 (indeterminate)
 
 --- nemesis ---
 Fault injection was enabled during this run.
